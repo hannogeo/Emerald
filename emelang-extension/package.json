@@ -1,0 +1,38 @@
+{
+    "name": "emelang-vscode",
+    "displayName": "Emerald",
+    "description": "Syntax highlighting for the Emerald Language",
+    "version": "0.1.0",
+    "publisher": "hanno",
+    "engines": {
+        "vscode": "^1.80.0"
+    },
+    "categories": [
+        "Programming Languages"
+    ],
+    "contributes": {
+        "languages": [
+            {
+                "id": "emelang",
+                "icon": {
+                    "light": "./icons/emelang.svg",
+                    "dark": "./icons/emelang.svg"
+                },
+                "aliases": [
+                    "Emerald"
+                ],
+                "extensions": [
+                    ".emlg"
+                ],
+                "configuration": "./language-configuration.json"
+            }
+        ],
+        "grammars": [
+            {
+                "language": "emelang",
+                "scopeName": "source.emelang",
+                "path": "./syntaxes/emelang.tmLanguage.json"
+            }
+        ]
+    }
+}
