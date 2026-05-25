@@ -1,0 +1,48 @@
+{
+  "scopeName": "source.emld",
+  "name": "Emerald",
+  "patterns": [
+    { "include": "#comments" },
+    { "include": "#keywords" },
+    { "include": "#strings" },
+    { "include": "#numbers" },
+    { "include": "#booleans" }
+  ],
+  "repository": {
+    "comments": {
+      "name": "comment.line.emerald",
+      "match": "/.*$"
+    },
+    "keywords": {
+      "patterns": [
+        {
+          "name": "keyword.control.var.emerald",
+          "match": "\\bvar\\."
+        },
+        {
+          "name": "keyword.control.print.emerald",
+          "match": "\\bprint\\b"
+        }
+      ]
+    },
+    "strings": {
+      "name": "string.quoted.double.emerald",
+      "begin": "\"",
+      "end": "\"",
+      "patterns": [
+        {
+          "name": "constant.character.escape.emerald",
+          "match": "\\\\."
+        }
+      ]
+    },
+    "numbers": {
+      "name": "constant.numeric.emerald",
+      "match": "\\b\\d+(\\.\\d+)?\\b"
+    },
+    "booleans": {
+      "name": "constant.language.boolean.emerald",
+      "match": "\\b(True|False)\\b"
+    }
+  }
+}

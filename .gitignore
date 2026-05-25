@@ -1,1 +1,21 @@
-*.emlg
+# Emerald source files (test/scratch programs)
+*.emld
+
+# Built binary
+emerald.exe
+
+# Go build artifacts
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
