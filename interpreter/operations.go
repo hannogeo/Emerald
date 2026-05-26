@@ -6,6 +6,27 @@ import (
 )
 
 func binaryOperation(left interface{}, operator string, right interface{}, line int) (interface{}, error) {
+	switch operator {
+	case "=":
+		return left == right, nil
+	case "<", ">", "<=", ">=":
+		lNum, ok1 := left.(float64)
+		rNum, ok2 := right.(float64)
+		if !ok1 || !ok2 {
+			return nil, fmt.Errorf("comparison operator '%s' requires numbers at line %d", operator, line)
+		}
+		switch operator {
+		case "<":
+			return lNum < rNum, nil
+		case ">":
+			return lNum > rNum, nil
+		case "<=":
+			return lNum <= rNum, nil
+		case ">=":
+			return lNum >= rNum, nil
+		}
+	}
+
 	switch l := left.(type) {
 	case float64:
 		return numberOp(l, operator, right, line)

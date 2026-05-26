@@ -21,6 +21,16 @@ const (
 	SLASH      TokenType = "SLASH"
 	LPAREN     TokenType = "LPAREN"
 	RPAREN     TokenType = "RPAREN"
+	EQ         TokenType = "EQ"
+	LT         TokenType = "LT"
+	GT         TokenType = "GT"
+	LE         TokenType = "LE"
+	GE         TokenType = "GE"
+	IF         TokenType = "IF"
+	ELIF       TokenType = "ELIF"
+	ELSE       TokenType = "ELSE"
+	LBRACE     TokenType = "LBRACE"
+	RBRACE     TokenType = "RBRACE"
 )
 
 type Token struct {

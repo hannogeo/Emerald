@@ -89,12 +89,51 @@ func (l *Lexer) NextToken() Token {
 		tok = Token{Type: RPAREN, Literal: ")", Line: l.line, Col: l.col}
 		l.readChar()
 
+	case l.ch == '=':
+		tok = Token{Type: EQ, Literal: "=", Line: l.line, Col: l.col}
+		l.readChar()
+
+	case l.ch == '<':
+		if l.peekChar() == '=' {
+			tok = Token{Type: LE, Literal: "<=", Line: l.line, Col: l.col}
+			l.readChar()
+			l.readChar()
+		} else {
+			tok = Token{Type: LT, Literal: "<", Line: l.line, Col: l.col}
+			l.readChar()
+		}
+
+	case l.ch == '>':
+		if l.peekChar() == '=' {
+			tok = Token{Type: GE, Literal: ">=", Line: l.line, Col: l.col}
+			l.readChar()
+			l.readChar()
+		} else {
+			tok = Token{Type: GT, Literal: ">", Line: l.line, Col: l.col}
+			l.readChar()
+		}
+
+	case l.ch == '{':
+		tok = Token{Type: LBRACE, Literal: "{", Line: l.line, Col: l.col}
+		l.readChar()
+
+	case l.ch == '}':
+		tok = Token{Type: RBRACE, Literal: "}", Line: l.line, Col: l.col}
+		l.readChar()
+
 	default:
 		tok = Token{Type: ILLEGAL, Literal: string(l.ch), Line: l.line, Col: l.col}
 		l.readChar()
 	}
 
 	return tok
+}
+
+func (l *Lexer) peekChar() byte {
+	if l.readPos >= len(l.input) {
+		return 0
+	}
+	return l.input[l.readPos]
 }
 
 func (l *Lexer) skipWhitespace() {
@@ -193,6 +232,15 @@ func (l *Lexer) readIdentifierOrKeyword() Token {
 		tok.Literal = word
 	case "Null":
 		tok.Type = NULL
+		tok.Literal = word
+	case "if":
+		tok.Type = IF
+		tok.Literal = word
+	case "elif":
+		tok.Type = ELIF
+		tok.Literal = word
+	case "else":
+		tok.Type = ELSE
 		tok.Literal = word
 	default:
 		tok.Type = IDENTIFIER

@@ -2,12 +2,26 @@
   "comments": {
     "lineComment": "!"
   },
-  "brackets": [],
+  "brackets": [
+    ["{", "}"]
+  ],
   "autoClosingPairs": [
     {
       "open": "\"",
       "close": "\"",
       "notIn": ["string"]
+    },
+    {
+      "open": "{",
+      "close": "}"
     }
-  ]
+  ],
+  "surroundingPairs": [
+    ["\"", "\""],
+    ["{", "}"]
+  ],
+  "indentationRules": {
+    "increaseIndentPattern": "\\{[^}]*$",
+    "decreaseIndentPattern": "^\\s*\\}"
+  }
 }

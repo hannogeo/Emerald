@@ -110,3 +110,36 @@ func (ce *CallExpression) expressionNode() {}
 func (ce *CallExpression) String() string {
 	return fmt.Sprintf("%s(%s)", ce.Function, ce.Argument.String())
 }
+
+type BlockStatement struct {
+	Statements []Statement
+}
+
+func (bs *BlockStatement) statementNode() {}
+func (bs *BlockStatement) String() string {
+	var out string
+	for _, s := range bs.Statements {
+		out += s.String() + "\n"
+	}
+	return out
+}
+
+type IfStatement struct {
+	Condition   Expression
+	Consequence *BlockStatement
+	Alternative interface{} // *IfStatement (elif) or *BlockStatement (else) or nil
+}
+
+func (is *IfStatement) statementNode() {}
+func (is *IfStatement) String() string {
+	out := fmt.Sprintf("if %s { ... }", is.Condition.String())
+	if is.Alternative != nil {
+		switch alt := is.Alternative.(type) {
+		case *IfStatement:
+			out += " elif " + alt.String()
+		case *BlockStatement:
+			out += " else { ... }"
+		}
+	}
+	return out
+}

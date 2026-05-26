@@ -24,6 +24,8 @@ type Parser struct {
 const (
 	_ int = iota
 	LOWEST
+	EQUALS
+	LESSGREATER
 	SUM
 	PRODUCT
 	CALL
@@ -47,6 +49,11 @@ func NewParser(l *lexer.Lexer) *Parser {
 	p.registerInfix(lexer.MINUS, p.parseInfixExpression)
 	p.registerInfix(lexer.ASTERISK, p.parseInfixExpression)
 	p.registerInfix(lexer.SLASH, p.parseInfixExpression)
+	p.registerInfix(lexer.EQ, p.parseInfixExpression)
+	p.registerInfix(lexer.LT, p.parseInfixExpression)
+	p.registerInfix(lexer.GT, p.parseInfixExpression)
+	p.registerInfix(lexer.LE, p.parseInfixExpression)
+	p.registerInfix(lexer.GE, p.parseInfixExpression)
 
 	p.nextToken()
 	p.nextToken()
@@ -79,9 +86,6 @@ func (p *Parser) ParseProgram() *ast.Program {
 		if stmt != nil {
 			program.Statements = append(program.Statements, stmt)
 		}
-		for p.curToken.Type != lexer.NEWLINE && p.curToken.Type != lexer.EOF {
-			p.nextToken()
-		}
 		for p.curToken.Type == lexer.NEWLINE {
 			p.nextToken()
 		}
@@ -96,6 +100,8 @@ func (p *Parser) parseStatement() ast.Statement {
 		return p.parseVarStatement()
 	case lexer.PRINT:
 		return p.parsePrintStatement()
+	case lexer.IF:
+		return p.parseIfStatement()
 	default:
 		if p.curToken.Type == lexer.NEWLINE {
 			return nil
@@ -124,6 +130,10 @@ func (p *Parser) parseVarStatement() *ast.VarStatement {
 	}
 	stmt.Value = expr
 
+	for p.curToken.Type != lexer.NEWLINE && p.curToken.Type != lexer.EOF {
+		p.nextToken()
+	}
+
 	return stmt
 }
 
@@ -137,13 +147,76 @@ func (p *Parser) parsePrintStatement() *ast.PrintStatement {
 	}
 	stmt.Value = expr
 
+	for p.curToken.Type != lexer.NEWLINE && p.curToken.Type != lexer.EOF {
+		p.nextToken()
+	}
+
 	return stmt
+}
+
+func (p *Parser) parseIfStatement() *ast.IfStatement {
+	stmt := &ast.IfStatement{}
+
+	p.nextToken()
+
+	stmt.Condition = p.parseExpression(LOWEST)
+
+	for p.curToken.Type != lexer.LBRACE && p.curToken.Type != lexer.EOF {
+		p.nextToken()
+	}
+
+	stmt.Consequence = p.parseBlockStatement()
+
+	for p.curToken.Type == lexer.NEWLINE {
+		p.nextToken()
+	}
+
+	if p.curToken.Type == lexer.ELIF {
+		stmt.Alternative = p.parseIfStatement()
+	} else if p.curToken.Type == lexer.ELSE {
+		p.nextToken()
+		for p.curToken.Type != lexer.LBRACE && p.curToken.Type != lexer.EOF {
+			p.nextToken()
+		}
+		stmt.Alternative = p.parseBlockStatement()
+	}
+
+	return stmt
+}
+
+func (p *Parser) parseBlockStatement() *ast.BlockStatement {
+	block := &ast.BlockStatement{}
+	p.nextToken()
+
+	for p.curToken.Type == lexer.NEWLINE {
+		p.nextToken()
+	}
+
+	for p.curToken.Type != lexer.RBRACE && p.curToken.Type != lexer.EOF {
+		stmt := p.parseStatement()
+		if stmt != nil {
+			block.Statements = append(block.Statements, stmt)
+		}
+		for p.curToken.Type == lexer.NEWLINE {
+			p.nextToken()
+		}
+	}
+
+	if p.curToken.Type == lexer.RBRACE {
+		p.nextToken()
+	}
+
+	return block
 }
 
 func (p *Parser) peekPrecedence() int {
 	if fn, ok := p.infixFns[p.peekToken.Type]; ok {
 		_ = fn
 		switch p.peekToken.Type {
+		case lexer.EQ:
+			return EQUALS
+		case lexer.LT, lexer.GT, lexer.LE, lexer.GE:
+			return LESSGREATER
 		case lexer.PLUS, lexer.MINUS:
 			return SUM
 		case lexer.ASTERISK, lexer.SLASH:
@@ -157,6 +230,10 @@ func (p *Parser) peekPrecedence() int {
 
 func (p *Parser) curPrecedence() int {
 	switch p.curToken.Type {
+	case lexer.EQ:
+		return EQUALS
+	case lexer.LT, lexer.GT, lexer.LE, lexer.GE:
+		return LESSGREATER
 	case lexer.PLUS, lexer.MINUS:
 		return SUM
 	case lexer.ASTERISK, lexer.SLASH:

@@ -30,6 +30,10 @@ func (i *Interpreter) evalStatement(stmt ast.Statement) error {
 		return i.evalVarStatement(s)
 	case *ast.PrintStatement:
 		return i.evalPrintStatement(s)
+	case *ast.IfStatement:
+		return i.evalIfStatement(s)
+	case *ast.BlockStatement:
+		return i.evalBlockStatement(s)
 	}
 	return nil
 }
@@ -102,6 +106,41 @@ func (i *Interpreter) evalCallExpression(e *ast.CallExpression) (interface{}, er
 	default:
 		return nil, fmt.Errorf("undefined function '%s' at line %d", e.Function, e.Line)
 	}
+}
+
+func (i *Interpreter) evalIfStatement(stmt *ast.IfStatement) error {
+	cond, err := i.evalExpression(stmt.Condition)
+	if err != nil {
+		return err
+	}
+	condBool, ok := cond.(bool)
+	if !ok {
+		return fmt.Errorf("condition must be a boolean, got %s", typeName(cond))
+	}
+
+	if condBool {
+		return i.evalBlockStatement(stmt.Consequence)
+	}
+
+	if stmt.Alternative != nil {
+		switch alt := stmt.Alternative.(type) {
+		case *ast.IfStatement:
+			return i.evalIfStatement(alt)
+		case *ast.BlockStatement:
+			return i.evalBlockStatement(alt)
+		}
+	}
+	return nil
+}
+
+func (i *Interpreter) evalBlockStatement(block *ast.BlockStatement) error {
+	for _, stmt := range block.Statements {
+		err := i.evalStatement(stmt)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 func formatValue(val interface{}) string {

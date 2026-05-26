@@ -8,7 +8,8 @@
     { "include": "#numbers" },
     { "include": "#booleans" },
     { "include": "#null" },
-    { "include": "#functions" }
+    { "include": "#functions" },
+    { "include": "#operators" }
   ],
   "repository": {
     "comments": {
@@ -23,6 +24,10 @@
       "name": "support.function.emerald",
       "match": "\\b(str|num)\\b"
     },
+    "operators": {
+      "name": "keyword.operator.emerald",
+      "match": "=|<=|>=|<|>"
+    },
     "keywords": {
       "patterns": [
         {
@@ -32,6 +37,18 @@
         {
           "name": "keyword.control.print.emerald",
           "match": "\\bprint\\b"
+        },
+        {
+          "name": "keyword.control.if.emerald",
+          "match": "\\bif\\b"
+        },
+        {
+          "name": "keyword.control.elif.emerald",
+          "match": "\\belif\\b"
+        },
+        {
+          "name": "keyword.control.else.emerald",
+          "match": "\\belse\\b"
         }
       ]
     },
