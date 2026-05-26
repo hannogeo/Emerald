@@ -6,12 +6,22 @@
     { "include": "#keywords" },
     { "include": "#strings" },
     { "include": "#numbers" },
-    { "include": "#booleans" }
+    { "include": "#booleans" },
+    { "include": "#null" },
+    { "include": "#functions" }
   ],
   "repository": {
     "comments": {
       "name": "comment.line.emerald",
-      "match": "/.*$"
+      "match": "!.*$"
+    },
+    "null": {
+      "name": "constant.language.null.emerald",
+      "match": "\\bNull\\b"
+    },
+    "functions": {
+      "name": "support.function.emerald",
+      "match": "\\b(str|num)\\b"
     },
     "keywords": {
       "patterns": [

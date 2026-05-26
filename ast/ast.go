@@ -33,7 +33,7 @@ type CommentStatement struct {
 }
 
 func (cs *CommentStatement) statementNode() {}
-func (cs *CommentStatement) String() string  { return fmt.Sprintf("// %s", cs.Text) }
+func (cs *CommentStatement) String() string { return fmt.Sprintf("// %s", cs.Text) }
 
 type VarStatement struct {
 	Name  string
@@ -41,28 +41,28 @@ type VarStatement struct {
 }
 
 func (vs *VarStatement) statementNode() {}
-func (vs *VarStatement) String() string  { return fmt.Sprintf("var.%s %s", vs.Name, vs.Value.String()) }
+func (vs *VarStatement) String() string { return fmt.Sprintf("var.%s %s", vs.Name, vs.Value.String()) }
 
 type PrintStatement struct {
 	Value Expression
 }
 
 func (ps *PrintStatement) statementNode() {}
-func (ps *PrintStatement) String() string  { return fmt.Sprintf("print %s", ps.Value.String()) }
+func (ps *PrintStatement) String() string { return fmt.Sprintf("print %s", ps.Value.String()) }
 
 type StringLiteral struct {
 	Value string
 }
 
 func (sl *StringLiteral) expressionNode() {}
-func (sl *StringLiteral) String() string   { return fmt.Sprintf("%q", sl.Value) }
+func (sl *StringLiteral) String() string  { return fmt.Sprintf("%q", sl.Value) }
 
 type NumberLiteral struct {
 	Value float64
 }
 
 func (nl *NumberLiteral) expressionNode() {}
-func (nl *NumberLiteral) String() string   { return fmt.Sprintf("%v", nl.Value) }
+func (nl *NumberLiteral) String() string  { return fmt.Sprintf("%v", nl.Value) }
 
 type BooleanLiteral struct {
 	Value bool
@@ -76,9 +76,37 @@ func (bl *BooleanLiteral) String() string {
 	return "False"
 }
 
+type NullLiteral struct{}
+
+func (nl *NullLiteral) expressionNode() {}
+func (nl *NullLiteral) String() string  { return "Null" }
+
 type Identifier struct {
 	Value string
 }
 
 func (i *Identifier) expressionNode() {}
-func (i *Identifier) String() string   { return i.Value }
+func (i *Identifier) String() string  { return i.Value }
+
+type BinaryExpression struct {
+	Left     Expression
+	Operator string
+	Right    Expression
+	Line     int
+}
+
+func (be *BinaryExpression) expressionNode() {}
+func (be *BinaryExpression) String() string {
+	return fmt.Sprintf("(%s %s %s)", be.Left.String(), be.Operator, be.Right.String())
+}
+
+type CallExpression struct {
+	Function string
+	Argument Expression
+	Line     int
+}
+
+func (ce *CallExpression) expressionNode() {}
+func (ce *CallExpression) String() string {
+	return fmt.Sprintf("%s(%s)", ce.Function, ce.Argument.String())
+}

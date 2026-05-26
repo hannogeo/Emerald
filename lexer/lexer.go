@@ -1,34 +1,8 @@
 package lexer
 
 import (
-	"fmt"
 	"strings"
 )
-
-type TokenType string
-
-const (
-	EOF        TokenType = "EOF"
-	ILLEGAL    TokenType = "ILLEGAL"
-	NEWLINE    TokenType = "NEWLINE"
-	VAR        TokenType = "VAR"
-	IDENTIFIER TokenType = "IDENTIFIER"
-	STRING     TokenType = "STRING"
-	NUMBER     TokenType = "NUMBER"
-	BOOLEAN    TokenType = "BOOLEAN"
-	PRINT      TokenType = "PRINT"
-)
-
-type Token struct {
-	Type    TokenType
-	Literal string
-	Line    int
-	Col     int
-}
-
-func (t Token) String() string {
-	return fmt.Sprintf("Token{%s, %q, Ln:%d, Col:%d}", t.Type, t.Literal, t.Line, t.Col)
-}
 
 type Lexer struct {
 	input   string
@@ -64,7 +38,7 @@ func (l *Lexer) NextToken() Token {
 	for {
 		l.skipWhitespace()
 
-		if l.ch == '/' {
+		if l.ch == '!' {
 			l.skipComment()
 			continue
 		}
@@ -85,16 +59,35 @@ func (l *Lexer) NextToken() Token {
 	case l.ch == '"':
 		tok = l.readString()
 
-	case l.ch == '\r':
-		l.readChar()
-		return l.NextToken()
-
-
 	case isDigit(l.ch) || (l.ch == '.' && l.readPos < len(l.input) && isDigit(l.input[l.readPos])):
 		tok = l.readNumber()
 
 	case isLetter(l.ch):
 		tok = l.readIdentifierOrKeyword()
+
+	case l.ch == '+':
+		tok = Token{Type: PLUS, Literal: "+", Line: l.line, Col: l.col}
+		l.readChar()
+
+	case l.ch == '-':
+		tok = Token{Type: MINUS, Literal: "-", Line: l.line, Col: l.col}
+		l.readChar()
+
+	case l.ch == '*':
+		tok = Token{Type: ASTERISK, Literal: "*", Line: l.line, Col: l.col}
+		l.readChar()
+
+	case l.ch == '/':
+		tok = Token{Type: SLASH, Literal: "/", Line: l.line, Col: l.col}
+		l.readChar()
+
+	case l.ch == '(':
+		tok = Token{Type: LPAREN, Literal: "(", Line: l.line, Col: l.col}
+		l.readChar()
+
+	case l.ch == ')':
+		tok = Token{Type: RPAREN, Literal: ")", Line: l.line, Col: l.col}
+		l.readChar()
 
 	default:
 		tok = Token{Type: ILLEGAL, Literal: string(l.ch), Line: l.line, Col: l.col}
@@ -197,6 +190,9 @@ func (l *Lexer) readIdentifierOrKeyword() Token {
 		tok.Literal = word
 	case "False":
 		tok.Type = BOOLEAN
+		tok.Literal = word
+	case "Null":
+		tok.Type = NULL
 		tok.Literal = word
 	default:
 		tok.Type = IDENTIFIER

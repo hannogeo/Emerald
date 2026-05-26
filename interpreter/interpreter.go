@@ -2,7 +2,6 @@ package interpreter
 
 import (
 	"fmt"
-	"strconv"
 
 	"emerald/ast"
 )
@@ -61,14 +60,48 @@ func (i *Interpreter) evalExpression(expr ast.Expression) (interface{}, error) {
 		return e.Value, nil
 	case *ast.BooleanLiteral:
 		return e.Value, nil
+	case *ast.NullLiteral:
+		return nil, nil
 	case *ast.Identifier:
 		val, ok := i.env[e.Value]
 		if !ok {
 			return nil, fmt.Errorf("undefined variable '%s'", e.Value)
 		}
 		return val, nil
+	case *ast.BinaryExpression:
+		return i.evalBinaryExpression(e)
+	case *ast.CallExpression:
+		return i.evalCallExpression(e)
 	}
 	return nil, fmt.Errorf("unknown expression type")
+}
+
+func (i *Interpreter) evalBinaryExpression(e *ast.BinaryExpression) (interface{}, error) {
+	left, err := i.evalExpression(e.Left)
+	if err != nil {
+		return nil, err
+	}
+	right, err := i.evalExpression(e.Right)
+	if err != nil {
+		return nil, err
+	}
+	return binaryOperation(left, e.Operator, right, e.Line)
+}
+
+func (i *Interpreter) evalCallExpression(e *ast.CallExpression) (interface{}, error) {
+	arg, err := i.evalExpression(e.Argument)
+	if err != nil {
+		return nil, err
+	}
+
+	switch e.Function {
+	case "str":
+		return builtinStr(arg, e.Line)
+	case "num":
+		return builtinNum(arg, e.Line)
+	default:
+		return nil, fmt.Errorf("undefined function '%s' at line %d", e.Function, e.Line)
+	}
 }
 
 func formatValue(val interface{}) string {
@@ -76,12 +109,21 @@ func formatValue(val interface{}) string {
 	case string:
 		return v
 	case float64:
-		return strconv.FormatFloat(v, 'f', -1, 64)
+		return formatNumber(v)
 	case bool:
 		if v {
 			return "True"
 		}
 		return "False"
+	case nil:
+		return "Null"
 	}
 	return fmt.Sprintf("%v", val)
+}
+
+func formatNumber(v float64) string {
+	if v == float64(int64(v)) {
+		return fmt.Sprintf("%d", int64(v))
+	}
+	return fmt.Sprintf("%g", v)
 }

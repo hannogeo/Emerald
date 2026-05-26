@@ -2,10 +2,14 @@ package parser
 
 import (
 	"fmt"
-	"strconv"
 
 	"emerald/ast"
 	"emerald/lexer"
+)
+
+type (
+	prefixParseFn func() ast.Expression
+	infixParseFn  func(ast.Expression) ast.Expression
 )
 
 type Parser struct {
@@ -13,12 +17,40 @@ type Parser struct {
 	curToken  lexer.Token
 	peekToken lexer.Token
 	errors    []string
+	prefixFns map[lexer.TokenType]prefixParseFn
+	infixFns  map[lexer.TokenType]infixParseFn
 }
 
+const (
+	_ int = iota
+	LOWEST
+	SUM
+	PRODUCT
+	CALL
+)
+
 func NewParser(l *lexer.Lexer) *Parser {
-	p := &Parser{l: l}
+	p := &Parser{
+		l:         l,
+		prefixFns: make(map[lexer.TokenType]prefixParseFn),
+		infixFns:  make(map[lexer.TokenType]infixParseFn),
+	}
+
+	p.registerPrefix(lexer.IDENTIFIER, p.parseIdentifierOrCall)
+	p.registerPrefix(lexer.NUMBER, p.parseNumberLiteral)
+	p.registerPrefix(lexer.STRING, p.parseStringLiteral)
+	p.registerPrefix(lexer.BOOLEAN, p.parseBooleanLiteral)
+	p.registerPrefix(lexer.NULL, p.parseNullLiteral)
+	p.registerPrefix(lexer.LPAREN, p.parseGroupedExpression)
+
+	p.registerInfix(lexer.PLUS, p.parseInfixExpression)
+	p.registerInfix(lexer.MINUS, p.parseInfixExpression)
+	p.registerInfix(lexer.ASTERISK, p.parseInfixExpression)
+	p.registerInfix(lexer.SLASH, p.parseInfixExpression)
+
 	p.nextToken()
 	p.nextToken()
+
 	return p
 }
 
@@ -31,6 +63,14 @@ func (p *Parser) nextToken() {
 	p.peekToken = p.l.NextToken()
 }
 
+func (p *Parser) registerPrefix(t lexer.TokenType, fn prefixParseFn) {
+	p.prefixFns[t] = fn
+}
+
+func (p *Parser) registerInfix(t lexer.TokenType, fn infixParseFn) {
+	p.infixFns[t] = fn
+}
+
 func (p *Parser) ParseProgram() *ast.Program {
 	program := &ast.Program{}
 
@@ -38,6 +78,9 @@ func (p *Parser) ParseProgram() *ast.Program {
 		stmt := p.parseStatement()
 		if stmt != nil {
 			program.Statements = append(program.Statements, stmt)
+		}
+		for p.curToken.Type != lexer.NEWLINE && p.curToken.Type != lexer.EOF {
+			p.nextToken()
 		}
 		for p.curToken.Type == lexer.NEWLINE {
 			p.nextToken()
@@ -75,7 +118,7 @@ func (p *Parser) parseVarStatement() *ast.VarStatement {
 	stmt.Name = p.curToken.Literal
 	p.nextToken()
 
-	expr := p.parseExpression()
+	expr := p.parseExpression(LOWEST)
 	if expr == nil {
 		return nil
 	}
@@ -88,7 +131,7 @@ func (p *Parser) parsePrintStatement() *ast.PrintStatement {
 	stmt := &ast.PrintStatement{}
 	p.nextToken()
 
-	expr := p.parseExpression()
+	expr := p.parseExpression(LOWEST)
 	if expr == nil {
 		return nil
 	}
@@ -97,57 +140,30 @@ func (p *Parser) parsePrintStatement() *ast.PrintStatement {
 	return stmt
 }
 
-func (p *Parser) parseExpression() ast.Expression {
+func (p *Parser) peekPrecedence() int {
+	if fn, ok := p.infixFns[p.peekToken.Type]; ok {
+		_ = fn
+		switch p.peekToken.Type {
+		case lexer.PLUS, lexer.MINUS:
+			return SUM
+		case lexer.ASTERISK, lexer.SLASH:
+			return PRODUCT
+		default:
+			return LOWEST
+		}
+	}
+	return LOWEST
+}
+
+func (p *Parser) curPrecedence() int {
 	switch p.curToken.Type {
-	case lexer.STRING:
-		return p.parseStringLiteral()
-	case lexer.NUMBER:
-		return p.parseNumberLiteral()
-	case lexer.BOOLEAN:
-		return p.parseBooleanLiteral()
-	case lexer.IDENTIFIER:
-		return p.parseIdentifier()
+	case lexer.PLUS, lexer.MINUS:
+		return SUM
+	case lexer.ASTERISK, lexer.SLASH:
+		return PRODUCT
 	default:
-		p.error(fmt.Sprintf("expected value at line %d, got '%s'", p.curToken.Line, p.curToken.Literal))
-		p.nextToken()
-		return nil
+		return LOWEST
 	}
-}
-
-func (p *Parser) parseStringLiteral() ast.Expression {
-	lit := &ast.StringLiteral{Value: p.curToken.Literal}
-	p.nextToken()
-	return lit
-}
-
-func (p *Parser) parseNumberLiteral() ast.Expression {
-	value, err := strconv.ParseFloat(p.curToken.Literal, 64)
-	if err != nil {
-		p.error(fmt.Sprintf("invalid number '%s' at line %d", p.curToken.Literal, p.curToken.Line))
-		p.nextToken()
-		return nil
-	}
-	lit := &ast.NumberLiteral{Value: value}
-	p.nextToken()
-	return lit
-}
-
-func (p *Parser) parseBooleanLiteral() ast.Expression {
-	var value bool
-	if p.curToken.Literal == "True" {
-		value = true
-	} else {
-		value = false
-	}
-	lit := &ast.BooleanLiteral{Value: value}
-	p.nextToken()
-	return lit
-}
-
-func (p *Parser) parseIdentifier() ast.Expression {
-	ident := &ast.Identifier{Value: p.curToken.Literal}
-	p.nextToken()
-	return ident
 }
 
 func (p *Parser) error(msg string) {

@@ -17,7 +17,11 @@
         "id": "emerald",
         "aliases": ["Emerald", "emerald"],
         "extensions": [".emld"],
-        "configuration": "./language-configuration.json"
+        "configuration": "./language-configuration.json",
+        "icon": {
+          "light": "./emerald.png",
+          "dark": "./emerald.png"
+        }
       }
     ],
     "grammars": [
