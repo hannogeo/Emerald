@@ -32,6 +32,10 @@ func (i *Interpreter) evalStatement(stmt ast.Statement) error {
 		return i.evalPrintStatement(s)
 	case *ast.IfStatement:
 		return i.evalIfStatement(s)
+	case *ast.FuncStatement:
+		return i.evalFuncStatement(s)
+	case *ast.RunStatement:
+		return i.evalRunStatement(s)
 	case *ast.BlockStatement:
 		return i.evalBlockStatement(s)
 	}
@@ -131,6 +135,23 @@ func (i *Interpreter) evalIfStatement(stmt *ast.IfStatement) error {
 		}
 	}
 	return nil
+}
+
+func (i *Interpreter) evalFuncStatement(stmt *ast.FuncStatement) error {
+	i.env[stmt.Name] = stmt.Body
+	return nil
+}
+
+func (i *Interpreter) evalRunStatement(stmt *ast.RunStatement) error {
+	val, ok := i.env[stmt.Name]
+	if !ok {
+		return fmt.Errorf("undefined function '%s'", stmt.Name)
+	}
+	block, ok := val.(*ast.BlockStatement)
+	if !ok {
+		return fmt.Errorf("'%s' is not a function", stmt.Name)
+	}
+	return i.evalBlockStatement(block)
 }
 
 func (i *Interpreter) evalBlockStatement(block *ast.BlockStatement) error {

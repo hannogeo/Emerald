@@ -35,6 +35,14 @@
           "match": "\\bvar\\."
         },
         {
+          "name": "keyword.control.func.emerald",
+          "match": "\\bfunc\\."
+        },
+        {
+          "name": "keyword.control.run.emerald",
+          "match": "\\brun\\."
+        },
+        {
           "name": "keyword.control.print.emerald",
           "match": "\\bprint\\b"
         },

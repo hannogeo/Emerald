@@ -102,6 +102,10 @@ func (p *Parser) parseStatement() ast.Statement {
 		return p.parsePrintStatement()
 	case lexer.IF:
 		return p.parseIfStatement()
+	case lexer.FUNC:
+		return p.parseFuncStatement()
+	case lexer.RUN:
+		return p.parseRunStatement()
 	default:
 		if p.curToken.Type == lexer.NEWLINE {
 			return nil
@@ -179,6 +183,45 @@ func (p *Parser) parseIfStatement() *ast.IfStatement {
 			p.nextToken()
 		}
 		stmt.Alternative = p.parseBlockStatement()
+	}
+
+	return stmt
+}
+
+func (p *Parser) parseFuncStatement() *ast.FuncStatement {
+	stmt := &ast.FuncStatement{}
+	p.nextToken()
+
+	if p.curToken.Type != lexer.IDENTIFIER {
+		p.error(fmt.Sprintf("expected function name after 'func.' at line %d, got '%s'", p.curToken.Line, p.curToken.Literal))
+		return nil
+	}
+
+	stmt.Name = p.curToken.Literal
+	p.nextToken()
+
+	for p.curToken.Type != lexer.LBRACE && p.curToken.Type != lexer.EOF {
+		p.nextToken()
+	}
+
+	stmt.Body = p.parseBlockStatement()
+	return stmt
+}
+
+func (p *Parser) parseRunStatement() *ast.RunStatement {
+	stmt := &ast.RunStatement{}
+	p.nextToken()
+
+	if p.curToken.Type != lexer.IDENTIFIER {
+		p.error(fmt.Sprintf("expected function name after 'run.' at line %d, got '%s'", p.curToken.Line, p.curToken.Literal))
+		return nil
+	}
+
+	stmt.Name = p.curToken.Literal
+	p.nextToken()
+
+	for p.curToken.Type != lexer.NEWLINE && p.curToken.Type != lexer.EOF {
+		p.nextToken()
 	}
 
 	return stmt

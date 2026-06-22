@@ -29,6 +29,8 @@ const (
 	IF         TokenType = "IF"
 	ELIF       TokenType = "ELIF"
 	ELSE       TokenType = "ELSE"
+	FUNC       TokenType = "FUNC"
+	RUN        TokenType = "RUN"
 	LBRACE     TokenType = "LBRACE"
 	RBRACE     TokenType = "RBRACE"
 )

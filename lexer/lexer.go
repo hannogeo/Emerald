@@ -220,6 +220,20 @@ func (l *Lexer) readIdentifierOrKeyword() Token {
 		return tok
 	}
 
+	if word == "func" && l.ch == '.' {
+		l.readChar()
+		tok.Type = FUNC
+		tok.Literal = "func."
+		return tok
+	}
+
+	if word == "run" && l.ch == '.' {
+		l.readChar()
+		tok.Type = RUN
+		tok.Literal = "run."
+		return tok
+	}
+
 	switch word {
 	case "print":
 		tok.Type = PRINT

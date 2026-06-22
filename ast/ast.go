@@ -124,6 +124,21 @@ func (bs *BlockStatement) String() string {
 	return out
 }
 
+type FuncStatement struct {
+	Name string
+	Body *BlockStatement
+}
+
+func (fs *FuncStatement) statementNode() {}
+func (fs *FuncStatement) String() string { return fmt.Sprintf("func.%s { ... }", fs.Name) }
+
+type RunStatement struct {
+	Name string
+}
+
+func (rs *RunStatement) statementNode() {}
+func (rs *RunStatement) String() string { return fmt.Sprintf("run.%s", rs.Name) }
+
 type IfStatement struct {
 	Condition   Expression
 	Consequence *BlockStatement
