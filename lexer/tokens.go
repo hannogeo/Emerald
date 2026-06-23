@@ -33,6 +33,7 @@ const (
 	FUNC       TokenType = "FUNC"
 	RUN        TokenType = "RUN"
 	ADD        TokenType = "ADD"
+	INPUT      TokenType = "INPUT"
 	COMMA      TokenType = "COMMA"
 	LBRACE     TokenType = "LBRACE"
 	RBRACE     TokenType = "RBRACE"

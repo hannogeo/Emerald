@@ -3,6 +3,7 @@ package parser
 import (
 	"fmt"
 	"strconv"
+	"strings"
 
 	"emerald/ast"
 	"emerald/lexer"
@@ -67,7 +68,38 @@ func (p *Parser) parseStringLiteral() ast.Expression {
 }
 
 func (p *Parser) parseInterpolatedStringLiteral() ast.Expression {
-	return &ast.InterpolatedStringLiteral{Raw: p.curToken.Literal}
+	raw := p.curToken.Literal
+	parts := []ast.InterpolationPart{}
+	for {
+		start := strings.Index(raw, "{")
+		if start == -1 {
+			parts = append(parts, ast.InterpolationPart{Text: raw})
+			break
+		}
+		if start > 0 {
+			parts = append(parts, ast.InterpolationPart{Text: raw[:start]})
+		}
+		end := strings.Index(raw[start:], "}")
+		if end == -1 {
+			p.error(fmt.Sprintf("unclosed '{' in interpolated string at line %d", p.curToken.Line))
+			return nil
+		}
+		exprStr := raw[start+1 : start+end]
+		subLexer := lexer.NewLexer(exprStr)
+		subParser := NewParser(subLexer)
+		expr := subParser.parseExpression(LOWEST)
+		if len(subParser.errors) > 0 {
+			p.error(fmt.Sprintf("invalid expression in interpolated string at line %d: %s", p.curToken.Line, subParser.errors[0]))
+			return nil
+		}
+		if expr == nil {
+			p.error(fmt.Sprintf("empty expression in interpolated string at line %d", p.curToken.Line))
+			return nil
+		}
+		parts = append(parts, ast.InterpolationPart{Expr: expr})
+		raw = raw[start+end+1:]
+	}
+	return &ast.InterpolatedStringLiteral{Parts: parts}
 }
 
 func (p *Parser) parseBooleanLiteral() ast.Expression {

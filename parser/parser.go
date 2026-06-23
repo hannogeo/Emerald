@@ -113,6 +113,9 @@ func (p *Parser) parseStatement() ast.Statement {
 		if p.curToken.Type == lexer.NEWLINE {
 			return nil
 		}
+		if p.curToken.Type == lexer.IDENTIFIER && p.peekToken.Type == lexer.INPUT {
+			return p.parseInputStatement()
+		}
 		p.error(fmt.Sprintf("unexpected token '%s' at line %d, col %d", p.curToken.Literal, p.curToken.Line, p.curToken.Col))
 		p.nextToken()
 		return nil
@@ -247,6 +250,26 @@ func (p *Parser) parseAddStatement() *ast.AddStatement {
 		return nil
 	}
 	stmt.Value = expr
+
+	for p.curToken.Type != lexer.NEWLINE && p.curToken.Type != lexer.EOF {
+		p.nextToken()
+	}
+
+	return stmt
+}
+
+func (p *Parser) parseInputStatement() *ast.InputStatement {
+	stmt := &ast.InputStatement{}
+	stmt.Name = p.curToken.Literal
+	p.nextToken()
+	p.nextToken()
+
+	if p.curToken.Type != lexer.STRING {
+		p.error(fmt.Sprintf("expected prompt string after 'input.' at line %d, got '%s'", p.curToken.Line, p.curToken.Literal))
+		return nil
+	}
+	stmt.Prompt = p.curToken.Literal
+	p.nextToken()
 
 	for p.curToken.Type != lexer.NEWLINE && p.curToken.Type != lexer.EOF {
 		p.nextToken()

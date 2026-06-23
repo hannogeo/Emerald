@@ -57,12 +57,27 @@ type StringLiteral struct {
 func (sl *StringLiteral) expressionNode() {}
 func (sl *StringLiteral) String() string  { return fmt.Sprintf("%q", sl.Value) }
 
+type InterpolationPart struct {
+	Text string
+	Expr Expression
+}
+
 type InterpolatedStringLiteral struct {
-	Raw string
+	Parts []InterpolationPart
 }
 
 func (isl *InterpolatedStringLiteral) expressionNode() {}
-func (isl *InterpolatedStringLiteral) String() string  { return fmt.Sprintf("$\"%s\"", isl.Raw) }
+func (isl *InterpolatedStringLiteral) String() string {
+	var out string
+	for _, p := range isl.Parts {
+		if p.Expr != nil {
+			out += "{" + p.Expr.String() + "}"
+		} else {
+			out += p.Text
+		}
+	}
+	return "$" + out
+}
 
 type NumberLiteral struct {
 	Value float64
@@ -169,6 +184,14 @@ type AddStatement struct {
 
 func (as *AddStatement) statementNode() {}
 func (as *AddStatement) String() string { return fmt.Sprintf("add.%s %s", as.Name, as.Value.String()) }
+
+type InputStatement struct {
+	Name   string
+	Prompt string
+}
+
+func (is *InputStatement) statementNode() {}
+func (is *InputStatement) String() string { return fmt.Sprintf("%s input.%q", is.Name, is.Prompt) }
 
 type IfStatement struct {
 	Condition   Expression

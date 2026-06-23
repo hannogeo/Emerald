@@ -36,6 +36,10 @@
           "match": "\\bvar\\."
         },
         {
+          "name": "keyword.control.input.emerald",
+          "match": "\\binput\\."
+        },
+        {
           "name": "keyword.control.add.emerald",
           "match": "\\badd\\."
         },

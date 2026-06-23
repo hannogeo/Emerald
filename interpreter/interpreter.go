@@ -1,7 +1,9 @@
 package interpreter
 
 import (
+	"bufio"
 	"fmt"
+	"os"
 	"strings"
 
 	"emerald/ast"
@@ -37,6 +39,8 @@ func (i *Interpreter) evalStatement(stmt ast.Statement) error {
 		return i.evalFuncStatement(s)
 	case *ast.RunStatement:
 		return i.evalRunStatement(s)
+	case *ast.InputStatement:
+		return i.evalInputStatement(s)
 	case *ast.AddStatement:
 		return i.evalAddStatement(s)
 	case *ast.BlockStatement:
@@ -115,6 +119,18 @@ func (i *Interpreter) evalListLiteral(e *ast.ListLiteral) (interface{}, error) {
 	return list, nil
 }
 
+func (i *Interpreter) evalInputStatement(stmt *ast.InputStatement) error {
+	fmt.Print(stmt.Prompt)
+	reader := bufio.NewReader(os.Stdin)
+	line, err := reader.ReadString('\n')
+	if err != nil {
+		return err
+	}
+	line = strings.TrimRight(line, "\r\n")
+	i.env[stmt.Name] = line
+	return nil
+}
+
 func (i *Interpreter) evalAddStatement(stmt *ast.AddStatement) error {
 	val, ok := i.env[stmt.Name]
 	if !ok {
@@ -164,26 +180,21 @@ func (i *Interpreter) evalCallExpression(e *ast.CallExpression) (interface{}, er
 }
 
 func (i *Interpreter) evalInterpolatedString(e *ast.InterpolatedStringLiteral) (interface{}, error) {
-	raw := e.Raw
 	var result strings.Builder
-	for {
-		start := strings.Index(raw, "{")
-		if start == -1 {
-			result.WriteString(raw)
-			break
+	for _, part := range e.Parts {
+		if part.Expr != nil {
+			val, err := i.evalExpression(part.Expr)
+			if err != nil {
+				return nil, err
+			}
+			s, ok := val.(string)
+			if !ok {
+				return nil, fmt.Errorf("interpolated expression must be a string, use str() to convert %s", typeName(val))
+			}
+			result.WriteString(s)
+		} else {
+			result.WriteString(part.Text)
 		}
-		result.WriteString(raw[:start])
-		end := strings.Index(raw[start:], "}")
-		if end == -1 {
-			return nil, fmt.Errorf("unclosed '{' in interpolated string")
-		}
-		varName := raw[start+1 : start+end]
-		val, ok := i.env[varName]
-		if !ok {
-			return nil, fmt.Errorf("undefined variable '%s' in interpolated string", varName)
-		}
-		result.WriteString(formatValue(val))
-		raw = raw[start+end+1:]
 	}
 	return result.String(), nil
 }
