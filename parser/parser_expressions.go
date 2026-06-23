@@ -66,6 +66,10 @@ func (p *Parser) parseStringLiteral() ast.Expression {
 	return &ast.StringLiteral{Value: p.curToken.Literal}
 }
 
+func (p *Parser) parseInterpolatedStringLiteral() ast.Expression {
+	return &ast.InterpolatedStringLiteral{Raw: p.curToken.Literal}
+}
+
 func (p *Parser) parseBooleanLiteral() ast.Expression {
 	value := p.curToken.Literal == "True"
 	return &ast.BooleanLiteral{Value: value}

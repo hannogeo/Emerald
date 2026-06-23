@@ -57,6 +57,13 @@ type StringLiteral struct {
 func (sl *StringLiteral) expressionNode() {}
 func (sl *StringLiteral) String() string  { return fmt.Sprintf("%q", sl.Value) }
 
+type InterpolatedStringLiteral struct {
+	Raw string
+}
+
+func (isl *InterpolatedStringLiteral) expressionNode() {}
+func (isl *InterpolatedStringLiteral) String() string  { return fmt.Sprintf("$\"%s\"", isl.Raw) }
+
 type NumberLiteral struct {
 	Value float64
 }

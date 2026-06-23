@@ -2,6 +2,7 @@ package interpreter
 
 import (
 	"fmt"
+	"strings"
 
 	"emerald/ast"
 )
@@ -64,6 +65,8 @@ func (i *Interpreter) evalExpression(expr ast.Expression) (interface{}, error) {
 	switch e := expr.(type) {
 	case *ast.StringLiteral:
 		return e.Value, nil
+	case *ast.InterpolatedStringLiteral:
+		return i.evalInterpolatedString(e)
 	case *ast.NumberLiteral:
 		return e.Value, nil
 	case *ast.BooleanLiteral:
@@ -110,6 +113,31 @@ func (i *Interpreter) evalCallExpression(e *ast.CallExpression) (interface{}, er
 	default:
 		return nil, fmt.Errorf("undefined function '%s' at line %d", e.Function, e.Line)
 	}
+}
+
+func (i *Interpreter) evalInterpolatedString(e *ast.InterpolatedStringLiteral) (interface{}, error) {
+	raw := e.Raw
+	var result strings.Builder
+	for {
+		start := strings.Index(raw, "{")
+		if start == -1 {
+			result.WriteString(raw)
+			break
+		}
+		result.WriteString(raw[:start])
+		end := strings.Index(raw[start:], "}")
+		if end == -1 {
+			return nil, fmt.Errorf("unclosed '{' in interpolated string")
+		}
+		varName := raw[start+1 : start+end]
+		val, ok := i.env[varName]
+		if !ok {
+			return nil, fmt.Errorf("undefined variable '%s' in interpolated string", varName)
+		}
+		result.WriteString(formatValue(val))
+		raw = raw[start+end+1:]
+	}
+	return result.String(), nil
 }
 
 func (i *Interpreter) evalIfStatement(stmt *ast.IfStatement) error {
