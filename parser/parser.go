@@ -107,6 +107,8 @@ func (p *Parser) parseStatement() ast.Statement {
 		return p.parseFuncStatement()
 	case lexer.RUN:
 		return p.parseRunStatement()
+	case lexer.ADD:
+		return p.parseAddStatement()
 	default:
 		if p.curToken.Type == lexer.NEWLINE {
 			return nil
@@ -220,6 +222,31 @@ func (p *Parser) parseRunStatement() *ast.RunStatement {
 
 	stmt.Name = p.curToken.Literal
 	p.nextToken()
+
+	for p.curToken.Type != lexer.NEWLINE && p.curToken.Type != lexer.EOF {
+		p.nextToken()
+	}
+
+	return stmt
+}
+
+func (p *Parser) parseAddStatement() *ast.AddStatement {
+	stmt := &ast.AddStatement{}
+	p.nextToken()
+
+	if p.curToken.Type != lexer.IDENTIFIER {
+		p.error(fmt.Sprintf("expected list name after 'add.' at line %d, got '%s'", p.curToken.Line, p.curToken.Literal))
+		return nil
+	}
+
+	stmt.Name = p.curToken.Literal
+	p.nextToken()
+
+	expr := p.parseExpression(LOWEST)
+	if expr == nil {
+		return nil
+	}
+	stmt.Value = expr
 
 	for p.curToken.Type != lexer.NEWLINE && p.curToken.Type != lexer.EOF {
 		p.nextToken()

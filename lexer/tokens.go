@@ -32,6 +32,8 @@ const (
 	ELSE       TokenType = "ELSE"
 	FUNC       TokenType = "FUNC"
 	RUN        TokenType = "RUN"
+	ADD        TokenType = "ADD"
+	COMMA      TokenType = "COMMA"
 	LBRACE     TokenType = "LBRACE"
 	RBRACE     TokenType = "RBRACE"
 )

@@ -116,6 +116,10 @@ func (l *Lexer) NextToken() Token {
 			l.readChar()
 		}
 
+	case l.ch == ',':
+		tok = Token{Type: COMMA, Literal: ",", Line: l.line, Col: l.col}
+		l.readChar()
+
 	case l.ch == '{':
 		tok = Token{Type: LBRACE, Literal: "{", Line: l.line, Col: l.col}
 		l.readChar()
@@ -255,6 +259,13 @@ func (l *Lexer) readIdentifierOrKeyword() Token {
 		l.readChar()
 		tok.Type = VAR
 		tok.Literal = "var."
+		return tok
+	}
+
+	if word == "add" && l.ch == '.' {
+		l.readChar()
+		tok.Type = ADD
+		tok.Literal = "add."
 		return tok
 	}
 

@@ -107,6 +107,22 @@ func (be *BinaryExpression) String() string {
 	return fmt.Sprintf("(%s %s %s)", be.Left.String(), be.Operator, be.Right.String())
 }
 
+type ListLiteral struct {
+	Elements []Expression
+}
+
+func (ll *ListLiteral) expressionNode() {}
+func (ll *ListLiteral) String() string {
+	out := "("
+	for i, e := range ll.Elements {
+		if i > 0 {
+			out += ", "
+		}
+		out += e.String()
+	}
+	return out + ")"
+}
+
 type CallExpression struct {
 	Function string
 	Argument Expression
@@ -145,6 +161,14 @@ type RunStatement struct {
 
 func (rs *RunStatement) statementNode() {}
 func (rs *RunStatement) String() string { return fmt.Sprintf("run.%s", rs.Name) }
+
+type AddStatement struct {
+	Name  string
+	Value Expression
+}
+
+func (as *AddStatement) statementNode() {}
+func (as *AddStatement) String() string { return fmt.Sprintf("add.%s %s", as.Name, as.Value.String()) }
 
 type IfStatement struct {
 	Condition   Expression

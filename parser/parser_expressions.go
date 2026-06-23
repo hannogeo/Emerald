@@ -81,7 +81,33 @@ func (p *Parser) parseNullLiteral() ast.Expression {
 
 func (p *Parser) parseGroupedExpression() ast.Expression {
 	p.nextToken()
+
+	if p.curToken.Type == lexer.RPAREN {
+		return &ast.ListLiteral{Elements: []ast.Expression{}}
+	}
+
 	exp := p.parseExpression(LOWEST)
+
+	if p.peekToken.Type == lexer.COMMA {
+		elements := []ast.Expression{exp}
+		p.nextToken()
+		for {
+			p.nextToken()
+			if p.curToken.Type == lexer.RPAREN {
+				break
+			}
+			elements = append(elements, p.parseExpression(LOWEST))
+			if p.peekToken.Type != lexer.COMMA {
+				break
+			}
+			p.nextToken()
+		}
+		if p.peekToken.Type == lexer.RPAREN {
+			p.nextToken()
+		}
+		return &ast.ListLiteral{Elements: elements}
+	}
+
 	if p.peekToken.Type == lexer.RPAREN {
 		p.nextToken()
 	}

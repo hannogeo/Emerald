@@ -36,6 +36,10 @@
           "match": "\\bvar\\."
         },
         {
+          "name": "keyword.control.add.emerald",
+          "match": "\\badd\\."
+        },
+        {
           "name": "keyword.control.func.emerald",
           "match": "\\bfunc\\."
         },

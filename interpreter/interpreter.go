@@ -37,6 +37,8 @@ func (i *Interpreter) evalStatement(stmt ast.Statement) error {
 		return i.evalFuncStatement(s)
 	case *ast.RunStatement:
 		return i.evalRunStatement(s)
+	case *ast.AddStatement:
+		return i.evalAddStatement(s)
 	case *ast.BlockStatement:
 		return i.evalBlockStatement(s)
 	}
@@ -81,6 +83,8 @@ func (i *Interpreter) evalExpression(expr ast.Expression) (interface{}, error) {
 		return val, nil
 	case *ast.BinaryExpression:
 		return i.evalBinaryExpression(e)
+	case *ast.ListLiteral:
+		return i.evalListLiteral(e)
 	case *ast.CallExpression:
 		return i.evalCallExpression(e)
 	}
@@ -99,6 +103,35 @@ func (i *Interpreter) evalBinaryExpression(e *ast.BinaryExpression) (interface{}
 	return binaryOperation(left, e.Operator, right, e.Line)
 }
 
+func (i *Interpreter) evalListLiteral(e *ast.ListLiteral) (interface{}, error) {
+	list := make([]interface{}, 0, len(e.Elements))
+	for _, elem := range e.Elements {
+		val, err := i.evalExpression(elem)
+		if err != nil {
+			return nil, err
+		}
+		list = append(list, val)
+	}
+	return list, nil
+}
+
+func (i *Interpreter) evalAddStatement(stmt *ast.AddStatement) error {
+	val, ok := i.env[stmt.Name]
+	if !ok {
+		return fmt.Errorf("undefined list '%s'", stmt.Name)
+	}
+	list, ok := val.([]interface{})
+	if !ok {
+		return fmt.Errorf("'%s' is not a list", stmt.Name)
+	}
+	item, err := i.evalExpression(stmt.Value)
+	if err != nil {
+		return err
+	}
+	i.env[stmt.Name] = append(list, item)
+	return nil
+}
+
 func (i *Interpreter) evalCallExpression(e *ast.CallExpression) (interface{}, error) {
 	arg, err := i.evalExpression(e.Argument)
 	if err != nil {
@@ -110,9 +143,24 @@ func (i *Interpreter) evalCallExpression(e *ast.CallExpression) (interface{}, er
 		return builtinStr(arg, e.Line)
 	case "num":
 		return builtinNum(arg, e.Line)
-	default:
-		return nil, fmt.Errorf("undefined function '%s' at line %d", e.Function, e.Line)
 	}
+
+	val, ok := i.env[e.Function]
+	if !ok {
+		return nil, fmt.Errorf("undefined function or list '%s' at line %d", e.Function, e.Line)
+	}
+	list, ok := val.([]interface{})
+	if !ok {
+		return nil, fmt.Errorf("'%s' is not a list at line %d", e.Function, e.Line)
+	}
+	idx, ok := arg.(float64)
+	if !ok {
+		return nil, fmt.Errorf("list index must be a number at line %d", e.Line)
+	}
+	if idx < 1 || int(idx) > len(list) {
+		return nil, fmt.Errorf("list index out of range at line %d", e.Line)
+	}
+	return list[int(idx)-1], nil
 }
 
 func (i *Interpreter) evalInterpolatedString(e *ast.InterpolatedStringLiteral) (interface{}, error) {
@@ -205,6 +253,12 @@ func formatValue(val interface{}) string {
 		return "False"
 	case nil:
 		return "Null"
+	case []interface{}:
+		parts := make([]string, len(v))
+		for i, elem := range v {
+			parts[i] = formatValue(elem)
+		}
+		return strings.Join(parts, ", ")
 	}
 	return fmt.Sprintf("%v", val)
 }
