@@ -22,10 +22,10 @@ func (l *Lexer) readIdentifierOrKeyword() Token {
 		return tok
 	}
 
-	if word == "func" && l.ch == '.' {
+	if word == "fn" && l.ch == '.' {
 		l.readChar()
 		tok.Type = FUNC
-		tok.Literal = "func."
+		tok.Literal = "fn."
 		return tok
 	}
 

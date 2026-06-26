@@ -168,7 +168,7 @@ type FuncStatement struct {
 }
 
 func (fs *FuncStatement) statementNode() {}
-func (fs *FuncStatement) String() string { return fmt.Sprintf("func.%s { ... }", fs.Name) }
+func (fs *FuncStatement) String() string { return fmt.Sprintf("fn.%s { ... }", fs.Name) }
 
 type RunStatement struct {
 	Name string

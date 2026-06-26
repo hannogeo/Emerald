@@ -45,7 +45,7 @@
         },
         {
           "name": "keyword.control.func.emerald",
-          "match": "\\bfunc\\."
+          "match": "\\bfn\\."
         },
         {
           "name": "keyword.control.run.emerald",

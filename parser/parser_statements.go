@@ -108,7 +108,7 @@ func (p *Parser) parseFuncStatement() *ast.FuncStatement {
 	p.nextToken()
 
 	if p.curToken.Type != lexer.IDENTIFIER {
-		p.error(fmt.Sprintf("expected function name after 'func.' at line %d, got '%s'", p.curToken.Line, p.curToken.Literal))
+		p.error(fmt.Sprintf("expected function name after 'fn.' at line %d, got '%s'", p.curToken.Line, p.curToken.Literal))
 		return nil
 	}
 
