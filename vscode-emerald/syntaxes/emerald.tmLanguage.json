@@ -66,6 +66,18 @@
         {
           "name": "keyword.control.else.emerald",
           "match": "\\belse\\b"
+        },
+        {
+          "name": "keyword.control.for.emerald",
+          "match": "\\bfor\\b"
+        },
+        {
+          "name": "keyword.control.in.emerald",
+          "match": "\\bin\\b"
+        },
+        {
+          "name": "keyword.control.range.emerald",
+          "match": "\\brange:"
         }
       ]
     },

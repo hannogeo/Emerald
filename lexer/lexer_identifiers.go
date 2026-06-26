@@ -36,6 +36,13 @@ func (l *Lexer) readIdentifierOrKeyword() Token {
 		return tok
 	}
 
+	if word == "range" && l.ch == ':' {
+		l.readChar()
+		tok.Type = RANGE
+		tok.Literal = "range:"
+		return tok
+	}
+
 	switch word {
 	case "print":
 		tok.Type = PRINT
@@ -60,6 +67,12 @@ func (l *Lexer) readIdentifierOrKeyword() Token {
 		tok.Literal = word
 	case "else":
 		tok.Type = ELSE
+		tok.Literal = word
+	case "for":
+		tok.Type = FOR
+		tok.Literal = word
+	case "in":
+		tok.Type = IN
 		tok.Literal = word
 	default:
 		tok.Type = IDENTIFIER

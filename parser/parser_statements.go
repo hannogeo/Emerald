@@ -15,6 +15,8 @@ func (p *Parser) parseStatement() ast.Statement {
 		return p.parsePrintStatement()
 	case lexer.IF:
 		return p.parseIfStatement()
+	case lexer.FOR:
+		return p.parseForStatement()
 	case lexer.FUNC:
 		return p.parseFuncStatement()
 	case lexer.RUN:
@@ -164,6 +166,55 @@ func (p *Parser) parseAddStatement() *ast.AddStatement {
 		p.nextToken()
 	}
 
+	return stmt
+}
+
+func (p *Parser) parseForStatement() *ast.ForStatement {
+	stmt := &ast.ForStatement{}
+	p.nextToken()
+
+	if p.curToken.Type != lexer.IDENTIFIER {
+		p.error(fmt.Sprintf("expected loop variable name after 'for' at line %d, got '%s'", p.curToken.Line, p.curToken.Literal))
+		return nil
+	}
+	stmt.Variable = p.curToken.Literal
+	p.nextToken()
+
+	if p.curToken.Type != lexer.IN {
+		p.error(fmt.Sprintf("expected 'in' after loop variable at line %d, got '%s'", p.curToken.Line, p.curToken.Literal))
+		return nil
+	}
+	p.nextToken()
+
+	if p.curToken.Type == lexer.RANGE {
+		p.nextToken()
+		if p.curToken.Type == lexer.LPAREN {
+			p.nextToken()
+			start := p.parseExpression(LOWEST)
+			if p.peekToken.Type != lexer.COMMA {
+				p.error(fmt.Sprintf("expected ',' in range at line %d", p.curToken.Line))
+				return nil
+			}
+			p.nextToken()
+			p.nextToken()
+			end := p.parseExpression(LOWEST)
+			if p.peekToken.Type == lexer.RPAREN {
+				p.nextToken()
+			}
+			stmt.Iterable = &ast.RangeExpression{Start: start, End: end}
+		} else {
+			end := p.parseExpression(LOWEST)
+			stmt.Iterable = &ast.RangeExpression{Start: nil, End: end}
+		}
+	} else {
+		stmt.Iterable = p.parseExpression(LOWEST)
+	}
+
+	for p.curToken.Type != lexer.LBRACE && p.curToken.Type != lexer.EOF {
+		p.nextToken()
+	}
+
+	stmt.Body = p.parseBlockStatement()
 	return stmt
 }
 

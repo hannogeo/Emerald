@@ -37,6 +37,9 @@ const (
 	COMMA      TokenType = "COMMA"
 	LBRACE     TokenType = "LBRACE"
 	RBRACE     TokenType = "RBRACE"
+	FOR        TokenType = "FOR"
+	IN         TokenType = "IN"
+	RANGE      TokenType = "RANGE"
 )
 
 type Token struct {

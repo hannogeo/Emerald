@@ -192,6 +192,30 @@ type InputExpression struct {
 func (ie *InputExpression) expressionNode() {}
 func (ie *InputExpression) String() string { return fmt.Sprintf("input %s", ie.Prompt.String()) }
 
+type RangeExpression struct {
+	Start Expression
+	End   Expression
+}
+
+func (re *RangeExpression) expressionNode() {}
+func (re *RangeExpression) String() string {
+	if re.Start == nil {
+		return fmt.Sprintf("range:%s", re.End.String())
+	}
+	return fmt.Sprintf("range:(%s, %s)", re.Start.String(), re.End.String())
+}
+
+type ForStatement struct {
+	Variable string
+	Iterable Expression
+	Body     *BlockStatement
+}
+
+func (fs *ForStatement) statementNode() {}
+func (fs *ForStatement) String() string {
+	return fmt.Sprintf("for %s in %s { ... }", fs.Variable, fs.Iterable.String())
+}
+
 type IfStatement struct {
 	Condition   Expression
 	Consequence *BlockStatement

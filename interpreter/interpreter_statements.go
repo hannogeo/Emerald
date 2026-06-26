@@ -65,6 +65,60 @@ func (i *Interpreter) evalRunStatement(stmt *ast.RunStatement) error {
 	return i.evalBlockStatement(block)
 }
 
+func (i *Interpreter) evalForStatement(stmt *ast.ForStatement) error {
+	switch iter := stmt.Iterable.(type) {
+	case *ast.RangeExpression:
+		var start, end float64
+		if iter.Start != nil {
+			val, err := i.evalExpression(iter.Start)
+			if err != nil {
+				return err
+			}
+			s, ok := val.(float64)
+			if !ok {
+				return fmt.Errorf("range start must be a number")
+			}
+			start = s
+		} else {
+			start = 1
+		}
+		val, err := i.evalExpression(iter.End)
+		if err != nil {
+			return err
+		}
+		end, ok := val.(float64)
+		if !ok {
+			return fmt.Errorf("range end must be a number")
+		}
+		for x := start; x <= end; x++ {
+			i.env[stmt.Variable] = x
+			err := i.evalBlockStatement(stmt.Body)
+			if err != nil {
+				return err
+			}
+		}
+	case *ast.Identifier:
+		val, ok := i.env[iter.Value]
+		if !ok {
+			return fmt.Errorf("undefined list '%s'", iter.Value)
+		}
+		list, ok := val.([]interface{})
+		if !ok {
+			return fmt.Errorf("'%s' is not a list", iter.Value)
+		}
+		for _, item := range list {
+			i.env[stmt.Variable] = item
+			err := i.evalBlockStatement(stmt.Body)
+			if err != nil {
+				return err
+			}
+		}
+	default:
+		return fmt.Errorf("for-in requires a range or list")
+	}
+	return nil
+}
+
 func (i *Interpreter) evalBlockStatement(block *ast.BlockStatement) error {
 	for _, stmt := range block.Statements {
 		err := i.evalStatement(stmt)
