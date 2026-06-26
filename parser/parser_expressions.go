@@ -146,6 +146,12 @@ func (p *Parser) parseGroupedExpression() ast.Expression {
 	return exp
 }
 
+func (p *Parser) parseInputExpression() ast.Expression {
+	p.nextToken()
+	expr := p.parseExpression(LOWEST)
+	return &ast.InputExpression{Prompt: expr}
+}
+
 func (p *Parser) parseInfixExpression(left ast.Expression) ast.Expression {
 	op := p.curToken.Literal
 	line := p.curToken.Line
