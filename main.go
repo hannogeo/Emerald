@@ -22,7 +22,7 @@ func main() {
 	case "update":
 		runUpdate()
 	case "version":
-		fmt.Printf("Emerald v%s\n", Version)
+		versionCmd()
 	default:
 		runFile(os.Args[1])
 	}
@@ -51,6 +51,20 @@ func runFile(filename string) {
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "Runtime error:", err)
 		os.Exit(1)
+	}
+}
+
+func versionCmd() {
+	fmt.Printf("Emerald v%s\n", Version)
+
+	latest, err := fetchLatestRelease()
+	if err != nil {
+		return
+	}
+
+	if compareVersions(Version, latest.Version) < 0 {
+		fmt.Printf("A newer version is available: v%s\n", latest.Version)
+		fmt.Println("Run 'emerald update' to upgrade.")
 	}
 }
 
