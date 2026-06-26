@@ -14,13 +14,14 @@ func main() {
 		fmt.Fprintf(os.Stderr, "Emerald v%s\n", Version)
 		fmt.Fprintln(os.Stderr, "Usage: emerald <file.emld>")
 		fmt.Fprintln(os.Stderr, "       emerald update")
+		fmt.Fprintln(os.Stderr, "       emerald version")
 		os.Exit(1)
 	}
 
 	switch os.Args[1] {
 	case "update":
 		runUpdate()
-	case "version", "--version", "-v":
+	case "version":
 		fmt.Printf("Emerald v%s\n", Version)
 	default:
 		runFile(os.Args[1])

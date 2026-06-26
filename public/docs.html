@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Emerald - Docs</title>
+  <link rel="icon" type="image/png" href="emerald.png">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .docs-page {
+      padding: 7rem 0 4rem;
+    }
+    .docs-page h2 {
+      text-align: left;
+      margin-top: 3rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: .5rem;
+      border-bottom: 1px solid var(--border);
+      font-size: 1.6rem;
+    }
+    .docs-page h2:first-child {
+      margin-top: 0;
+    }
+    .docs-page h3 {
+      font-size: 1.15rem;
+      margin-top: 2rem;
+      margin-bottom: .75rem;
+    }
+    .docs-page p {
+      color: var(--text2);
+      margin-bottom: 1rem;
+      line-height: 1.7;
+    }
+    .docs-page ul {
+      color: var(--text2);
+      margin-bottom: 1rem;
+      padding-left: 1.5rem;
+      line-height: 1.8;
+    }
+    .docs-page pre {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      font-family: var(--font);
+      font-size: .85rem;
+      line-height: 1.6;
+      overflow-x: auto;
+      margin-bottom: 1.25rem;
+    }
+    .docs-page pre .kw { color: #ff7b72; }
+    .docs-page pre .fn { color: #79c0ff; }
+    .docs-page pre .str { color: #a5d6ff; }
+    .docs-page pre .num { color: #79c0ff; }
+    .docs-page pre .cm { color: #8b949e; font-style: italic; }
+    .docs-page pre .op { color: #ffa657; }
+    .docs-page code {
+      font-family: var(--font);
+      font-size: .85em;
+      background: var(--surface);
+      padding: .1em .4em;
+      border-radius: 3px;
+      font-variant-ligatures: none;
+    }
+    .docs-page table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 1.25rem;
+      font-size: .9rem;
+    }
+    .docs-page th, .docs-page td {
+      border: 1px solid var(--border);
+      padding: .6rem .8rem;
+      text-align: left;
+    }
+    .docs-page th {
+      background: var(--bg3);
+      color: var(--text);
+      font-weight: 600;
+    }
+    .docs-page td {
+      color: var(--text2);
+    }
+    .syntax-diagram {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: .6rem 1rem;
+      font-family: var(--font);
+      font-size: .8rem;
+      color: var(--text2);
+      margin-bottom: 1.25rem;
+    }
+    .back-link {
+      display: inline-block;
+      margin-bottom: 2rem;
+      color: var(--accent);
+      text-decoration: none;
+      font-size: .9rem;
+    }
+    .back-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo"><a href="index.html"><img src="emerald.png" alt="" class="logo-icon"> emerald</a></div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="https://github.com/hannogeo/emerald" target="_blank" rel="noopener noreferrer">GitHub</a>
+    </nav>
+  </header>
+
+  <main class="docs-page">
+    <a href="index.html" class="back-link">&larr; Back to Home</a>
+    <h1>Emerald Language Docs</h1>
+    <p>A tiny, interpreted language that gets out of your way.</p>
+
+    <h2>Getting Started</h2>
+    <h3>Installation</h3>
+    <p>Download the latest release, add it to your PATH, and you're done. That's it.</p>
+    <p>Once installed, run any Emerald files with:</p>
+    <pre>emerald fileName.emld</pre>
+
+    <h3>Hello World</h3>
+    <pre><span class="kw">print</span> <span class="str">"Hello, World!"</span></pre>
+
+    <h2>Comments</h2>
+    <p>Comments start with <code>!</code> and run to the end of the line.</p>
+    <pre><span class="cm">! This is a comment</span>
+<span class="kw">print</span> <span class="str">"hello"</span> <span class="cm">! inline comment</span></pre>
+
+    <h2>Variables</h2>
+    <p>All variables are global. Declaration uses the <code>var.</code> prefix.</p>
+    <pre><span class="kw">var</span>.<span class="fn">name</span> <span class="str">"Alice"</span>
+<span class="kw">var</span>.<span class="fn">age</span> <span class="num">30</span>
+<span class="kw">var</span>.<span class="fn">isCool</span> <span class="kw">True</span>
+<span class="kw">var</span>.<span class="fn">nothing</span> <span class="kw">Null</span></pre>
+
+    <h2>Data Types</h2>
+    <table>
+      <tr><th>Type</th><th>Examples</th><th>Notes</th></tr>
+      <tr><td>number</td><td><code>42</code>, <code>3.14</code></td><td>Stored as float64, printed as integer when whole</td></tr>
+      <tr><td>string</td><td><code>"hello"</code></td><td>Double-quoted. Supports <code>\n</code>, <code>\t</code>, <code>\\</code>, <code>\"</code></td></tr>
+      <tr><td>boolean</td><td><code>True</code>, <code>False</code></td><td>Capital first letter</td></tr>
+      <tr><td>Null</td><td><code>Null</code></td><td>Absent value (capital N)</td></tr>
+      <tr><td>list</td><td><code>(1, 2, 3)</code></td><td>Parenthesised, comma-separated. 1-indexed.</td></tr>
+    </table>
+
+    <h3>String Interpolation</h3>
+    <p>Use <code>$"..."</code> to embed expressions inside strings. Non-string values must be explicitly converted with <code>str()</code> -- no automatic coercion.</p>
+    <pre><span class="kw">var</span>.<span class="fn">name</span> <span class="str">"World"</span>
+<span class="kw">print</span> <span class="str">$"Hello, {</span><span class="fn">name</span><span class="str">}!"</span>     <span class="cm">! Hello, World!</span>
+
+<span class="kw">var</span>.<span class="fn">score</span> <span class="num">42</span>
+<span class="kw">print</span> <span class="str">$"Score: {</span><span class="fn">str</span>(<span class="fn">score</span>)<span class="str">}"</span>  <span class="cm">! Score: 42</span></pre>
+
+    <h2>Operators</h2>
+    <table>
+      <tr><th>Operator</th><th>Operation</th><th>Works on</th></tr>
+      <tr><td><code>+</code></td><td>Addition / concatenation</td><td>number + number, string + string</td></tr>
+      <tr><td><code>-</code></td><td>Subtraction / string removal</td><td>number - number, string - string</td></tr>
+      <tr><td><code>*</code></td><td>Multiplication / string repeat</td><td>number * number, string * number</td></tr>
+      <tr><td><code>/</code></td><td>Division</td><td>number / number</td></tr>
+      <tr><td><code>=</code></td><td>Equal to</td><td>All types</td></tr>
+      <tr><td><code>&lt;</code> <code>&gt;</code> <code>&lt;=</code> <code>&gt;=</code></td><td>Comparison</td><td>number only</td></tr>
+    </table>
+    <p>Note: equality is a single <code>=</code>, not <code>==</code>.</p>
+
+    <pre><span class="kw">var</span>.<span class="fn">x</span> <span class="num">10</span>
+<span class="kw">var</span>.<span class="fn">y</span> <span class="num">3</span>
+<span class="kw">print</span> <span class="fn">x</span> <span class="op">+</span> <span class="fn">y</span>    <span class="cm">! 13</span>
+<span class="kw">print</span> <span class="fn">x</span> <span class="op">-</span> <span class="fn">y</span>    <span class="cm">! 7</span>
+<span class="kw">print</span> <span class="fn">x</span> <span class="op">*</span> <span class="fn">y</span>    <span class="cm">! 30</span>
+<span class="kw">print</span> <span class="fn">x</span> <span class="op">/</span> <span class="fn">y</span>    <span class="cm">! 3.33333</span>
+<span class="kw">print</span> <span class="fn">x</span> <span class="op">></span> <span class="num">5</span>    <span class="cm">! True</span></pre>
+
+    <h2>Print</h2>
+    <p>The <code>print</code> statement evaluates an expression and outputs it to stdout with a trailing newline.</p>
+    <pre><span class="kw">print</span> <span class="str">"Hello"</span>
+<span class="kw">print</span> <span class="num">42</span>
+<span class="kw">print</span> <span class="fn">myVar</span>
+<span class="kw">print</span> <span class="str">$"The value is {</span><span class="fn">str</span>(<span class="fn">x</span>)<span class="str">}"</span></pre>
+
+    <h2>Conditionals</h2>
+    <p><code>if</code>, <code>elif</code>, and <code>else</code> for branching. Conditions must evaluate to a boolean.</p>
+    <pre><span class="kw">if</span> <span class="fn">x</span> <span class="op">></span> <span class="num">5</span> {
+  <span class="kw">print</span> <span class="str">"big"</span>
+}
+<span class="kw">elif</span> <span class="fn">x</span> <span class="op">></span> <span class="num">0</span> {
+  <span class="kw">print</span> <span class="str">"positive"</span>
+}
+<span class="kw">else</span> {
+  <span class="kw">print</span> <span class="str">"small or zero"</span>
+}</pre>
+
+    <h2>Loops</h2>
+    <p>The <code>for...in</code> loop iterates over a range or a list variable.</p>
+
+    <h3>Numeric Range</h3>
+    <p>Use <code>range:N</code> to loop from 1 to N inclusive. Use <code>range:(start, end)</code> for a custom range.</p>
+    <pre><span class="kw">for</span> <span class="fn">i</span> <span class="kw">in</span> <span class="kw">range</span>:<span class="num">5</span> {
+  <span class="kw">print</span> <span class="fn">i</span>
+}
+<span class="cm">! prints 1 2 3 4 5</span>
+
+<span class="kw">for</span> <span class="fn">i</span> <span class="kw">in</span> <span class="kw">range</span>:(<span class="num">0</span>, <span class="num">3</span>) {
+  <span class="kw">print</span> <span class="fn">i</span>
+}
+<span class="cm">! prints 0 1 2 3</span></pre>
+
+    <h3>List Iteration</h3>
+    <pre><span class="kw">var</span>.<span class="fn">fruits</span> (<span class="str">"apple"</span>, <span class="str">"banana"</span>, <span class="str">"cherry"</span>)
+
+<span class="kw">for</span> <span class="fn">fruit</span> <span class="kw">in</span> <span class="fn">fruits</span> {
+  <span class="kw">print</span> <span class="fn">fruit</span>
+}</pre>
+
+    <h2>Functions</h2>
+    <p>Functions are defined with <code>fn.</code> and called with <code>run.</code>. Functions have no parameters and no return value.</p>
+    <pre><span class="kw">fn</span>.<span class="fn">greet</span> {
+  <span class="kw">print</span> <span class="str">"Hello!"</span>
+}
+
+<span class="kw">fn</span>.<span class="fn">sayName</span> {
+  <span class="kw">print</span> <span class="fn">name</span>
+}
+
+<span class="kw">run</span>.<span class="fn">greet</span>
+<span class="kw">run</span>.<span class="fn">sayName</span></pre>
+
+    <h2>Lists</h2>
+    <p>Lists are parenthesised, comma-separated values. They are 1-indexed.</p>
+
+    <pre><span class="cm">! Create a list</span>
+<span class="kw">var</span>.<span class="fn">items</span> (<span class="num">10</span>, <span class="num">20</span>, <span class="num">30</span>)
+
+<span class="cm">! Access by index (1-based)</span>
+<span class="kw">print</span> <span class="fn">items</span>(<span class="num">1</span>)  <span class="cm">! 10</span>
+<span class="kw">print</span> <span class="fn">items</span>(<span class="num">3</span>)  <span class="cm">! 30</span>
+
+<span class="cm">! Add an element</span>
+<span class="kw">add</span>.<span class="fn">items</span> <span class="num">40</span>
+
+<span class="cm">! Empty list</span>
+<span class="kw">var</span>.<span class="fn">empty</span> ()</pre>
+
+    <h2>Input</h2>
+    <p>Read a line from stdin with an optional prompt. Returns a string.</p>
+    <pre><span class="kw">var</span>.<span class="fn">name</span> <span class="kw">input</span> <span class="str">"Enter your name: "</span>
+<span class="kw">print</span> <span class="str">$"Hello, {</span><span class="fn">name</span><span class="str">}!"</span></pre>
+
+    <h2>Built-in Functions</h2>
+    <table>
+      <tr><th>Function</th><th>Description</th><th>Example</th></tr>
+      <tr>
+        <td><code>str(x)</code></td>
+        <td>Convert any value to its string representation</td>
+        <td><code>str(42)</code> &rarr; <code>"42"</code></td>
+      </tr>
+      <tr>
+        <td><code>num(x)</code></td>
+        <td>Convert a value to a number. Works on strings, booleans, Null.</td>
+        <td><code>num("3.14")</code> &rarr; <code>3.14</code></td>
+      </tr>
+    </table>
+
+    <h2>CLI Usage</h2>
+    <pre>emerald &lt;file.emld&gt;     Run a script
+emerald update          Self-update to the latest version
+emerald version         Print version number</pre>
+
+  </main>
+
+  <footer>
+    <p>Emerald - built with Go</p>
+    <p class="small"><a href="https://github.com/hannogeo/emerald" target="_blank" rel="noopener noreferrer">GitHub</a></p>
+  </footer>
+</body>
+</html>

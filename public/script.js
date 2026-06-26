@@ -93,6 +93,7 @@ for fruit in fruits {
   let idx = 0;
   let isDeleting = false;
   let pauseType = ''; // '' = running, 'done' = full pause, 'empty' = reset pause
+  let lastDomUpdate = 0;
 
   const kw = new Set(['print','input','for','in','if','elif','else','True','False','Null']);
   const prefixes = new Set(['var','fn','run','add']);
@@ -168,10 +169,15 @@ for fruit in fruits {
     return out.join('');
   }
 
+  function flushDisplay() {
+    el.innerHTML = idx > 0 ? highlightSource(code.slice(0, idx)) : '';
+    lastDomUpdate = performance.now();
+  }
+
   function typewriter() {
     if (pauseType) {
       if (pauseType === 'done') {
-        el.innerHTML = highlightSource(code);
+        flushDisplay();
         pauseType = '';
         setTimeout(typewriter, 3000);
       } else {
@@ -184,19 +190,23 @@ for fruit in fruits {
 
     if (!isDeleting) {
       idx++;
-      el.innerHTML = highlightSource(code.slice(0, idx));
       if (idx >= code.length) {
         isDeleting = true;
+        flushDisplay();
         pauseType = 'done';
+      } else if (performance.now() - lastDomUpdate > 80) {
+        flushDisplay();
       }
       const speed = idx < 20 ? 45 : 25 + Math.random() * 20;
       setTimeout(typewriter, speed);
     } else {
       idx--;
-      el.innerHTML = idx > 0 ? highlightSource(code.slice(0, idx)) : '';
       if (idx <= 0) {
         isDeleting = false;
+        el.innerHTML = '';
         pauseType = 'empty';
+      } else if (performance.now() - lastDomUpdate > 70) {
+        flushDisplay();
       }
       setTimeout(typewriter, 12 + Math.random() * 8);
     }
@@ -218,7 +228,7 @@ for fruit in fruits {
       if (asset) {
         const sizeEl = document.getElementById('file-size');
         if (sizeEl) {
-          const mb = (asset.size / (1024 * 1024)).toFixed(1);
+          const mb = Math.round(asset.size / (1024 * 1024));
           sizeEl.textContent = '~' + mb + ' MB';
         }
         const dlBtn = document.getElementById('download-btn');
@@ -230,5 +240,15 @@ for fruit in fruits {
   }
 
   fetchReleaseInfo();
+
+  document.addEventListener('click', function(e) {
+    var link = e.target.closest('a');
+    if (!link) return;
+    var href = link.getAttribute('href');
+    if (!href || href.startsWith('http') || href.startsWith('#') || href.startsWith('//')) return;
+    if (href === location.pathname.replace(/\/?$/, '/index.html') || href === location.pathname) return;
+    e.preventDefault();
+    window.location = href;
+  });
 
 })();
