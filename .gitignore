@@ -1,4 +1,4 @@
-# Emerald source files (test/scratch programs)
+# Emerald source files
 *.emld
 
 # Built binary
@@ -15,6 +15,7 @@ emerald.exe
 
 # IDE
 .vscode/
+vscode-emerald/
 .idea/
 *.swp
 *.swo
