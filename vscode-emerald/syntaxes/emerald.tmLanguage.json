@@ -37,7 +37,7 @@
         },
         {
           "name": "keyword.control.input.emerald",
-          "match": "\\binput\\."
+          "match": "\\binput\\b"
         },
         {
           "name": "keyword.control.add.emerald",

@@ -185,13 +185,12 @@ type AddStatement struct {
 func (as *AddStatement) statementNode() {}
 func (as *AddStatement) String() string { return fmt.Sprintf("add.%s %s", as.Name, as.Value.String()) }
 
-type InputStatement struct {
-	Name   string
-	Prompt string
+type InputExpression struct {
+	Prompt Expression
 }
 
-func (is *InputStatement) statementNode() {}
-func (is *InputStatement) String() string { return fmt.Sprintf("%s input.%q", is.Name, is.Prompt) }
+func (ie *InputExpression) expressionNode() {}
+func (ie *InputExpression) String() string { return fmt.Sprintf("input %s", ie.Prompt.String()) }
 
 type IfStatement struct {
 	Condition   Expression

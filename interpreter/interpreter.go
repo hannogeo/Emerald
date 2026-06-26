@@ -39,8 +39,6 @@ func (i *Interpreter) evalStatement(stmt ast.Statement) error {
 		return i.evalFuncStatement(s)
 	case *ast.RunStatement:
 		return i.evalRunStatement(s)
-	case *ast.InputStatement:
-		return i.evalInputStatement(s)
 	case *ast.AddStatement:
 		return i.evalAddStatement(s)
 	case *ast.BlockStatement:
@@ -73,6 +71,8 @@ func (i *Interpreter) evalExpression(expr ast.Expression) (interface{}, error) {
 		return e.Value, nil
 	case *ast.InterpolatedStringLiteral:
 		return i.evalInterpolatedString(e)
+	case *ast.InputExpression:
+		return i.evalInputExpression(e)
 	case *ast.NumberLiteral:
 		return e.Value, nil
 	case *ast.BooleanLiteral:
@@ -119,16 +119,22 @@ func (i *Interpreter) evalListLiteral(e *ast.ListLiteral) (interface{}, error) {
 	return list, nil
 }
 
-func (i *Interpreter) evalInputStatement(stmt *ast.InputStatement) error {
-	fmt.Print(stmt.Prompt)
+func (i *Interpreter) evalInputExpression(e *ast.InputExpression) (interface{}, error) {
+	prompt, err := i.evalExpression(e.Prompt)
+	if err != nil {
+		return nil, err
+	}
+	promptStr, ok := prompt.(string)
+	if !ok {
+		return nil, fmt.Errorf("input prompt must be a string")
+	}
+	fmt.Print(promptStr)
 	reader := bufio.NewReader(os.Stdin)
 	line, err := reader.ReadString('\n')
 	if err != nil {
-		return err
+		return nil, err
 	}
-	line = strings.TrimRight(line, "\r\n")
-	i.env[stmt.Name] = line
-	return nil
+	return strings.TrimRight(line, "\r\n"), nil
 }
 
 func (i *Interpreter) evalAddStatement(stmt *ast.AddStatement) error {

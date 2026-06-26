@@ -276,13 +276,6 @@ func (l *Lexer) readIdentifierOrKeyword() Token {
 		return tok
 	}
 
-	if word == "input" && l.ch == '.' {
-		l.readChar()
-		tok.Type = INPUT
-		tok.Literal = "input."
-		return tok
-	}
-
 	if word == "run" && l.ch == '.' {
 		l.readChar()
 		tok.Type = RUN
@@ -293,6 +286,9 @@ func (l *Lexer) readIdentifierOrKeyword() Token {
 	switch word {
 	case "print":
 		tok.Type = PRINT
+		tok.Literal = word
+	case "input":
+		tok.Type = INPUT
 		tok.Literal = word
 	case "True":
 		tok.Type = BOOLEAN

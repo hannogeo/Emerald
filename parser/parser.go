@@ -42,6 +42,7 @@ func NewParser(l *lexer.Lexer) *Parser {
 	p.registerPrefix(lexer.NUMBER, p.parseNumberLiteral)
 	p.registerPrefix(lexer.STRING, p.parseStringLiteral)
 	p.registerPrefix(lexer.DOLLAR_STRING, p.parseInterpolatedStringLiteral)
+	p.registerPrefix(lexer.INPUT, p.parseInputExpression)
 	p.registerPrefix(lexer.BOOLEAN, p.parseBooleanLiteral)
 	p.registerPrefix(lexer.NULL, p.parseNullLiteral)
 	p.registerPrefix(lexer.LPAREN, p.parseGroupedExpression)
@@ -112,9 +113,6 @@ func (p *Parser) parseStatement() ast.Statement {
 	default:
 		if p.curToken.Type == lexer.NEWLINE {
 			return nil
-		}
-		if p.curToken.Type == lexer.IDENTIFIER && p.peekToken.Type == lexer.INPUT {
-			return p.parseInputStatement()
 		}
 		p.error(fmt.Sprintf("unexpected token '%s' at line %d, col %d", p.curToken.Literal, p.curToken.Line, p.curToken.Col))
 		p.nextToken()
@@ -258,24 +256,10 @@ func (p *Parser) parseAddStatement() *ast.AddStatement {
 	return stmt
 }
 
-func (p *Parser) parseInputStatement() *ast.InputStatement {
-	stmt := &ast.InputStatement{}
-	stmt.Name = p.curToken.Literal
+func (p *Parser) parseInputExpression() ast.Expression {
 	p.nextToken()
-	p.nextToken()
-
-	if p.curToken.Type != lexer.STRING {
-		p.error(fmt.Sprintf("expected prompt string after 'input.' at line %d, got '%s'", p.curToken.Line, p.curToken.Literal))
-		return nil
-	}
-	stmt.Prompt = p.curToken.Literal
-	p.nextToken()
-
-	for p.curToken.Type != lexer.NEWLINE && p.curToken.Type != lexer.EOF {
-		p.nextToken()
-	}
-
-	return stmt
+	expr := p.parseExpression(LOWEST)
+	return &ast.InputExpression{Prompt: expr}
 }
 
 func (p *Parser) parseBlockStatement() *ast.BlockStatement {
