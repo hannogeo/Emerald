@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Emerald - a simple, interpreted language</title>
+  <link rel="icon" type="image/png" href="emerald.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <canvas id="bg"></canvas>
+
+  <header>
+    <div class="logo"><img src="emerald.png" alt="" class="logo-icon"> emerald</div>
+    <nav>
+      <a href="#download">Download</a>
+      <a href="https://github.com/hannogeo/emerald" target="_blank">GitHub</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <h1>Emerald</h1>
+      <p class="subtitle">A tiny, interpreted language that gets out of your way.</p>
+      <p class="desc">
+        No build tools. No package manager. Just write code and run it with <code>emerald file.emld</code>.
+      </p>
+
+      <div class="code-window">
+        <div class="code-header">
+          <span class="dot red"></span>
+          <span class="dot yellow"></span>
+          <span class="dot green"></span>
+          <span class="title">demo.emld</span>
+        </div>
+        <pre><code id="demo-code"></code><span class="cursor">█</span></pre>
+      </div>
+
+      <div class="hero-actions">
+        <a href="#download" class="btn primary" id="hero-download-btn">Download for Windows</a>
+        <a href="https://github.com/hannogeo/emerald" target="_blank" rel="noopener noreferrer" class="btn secondary">View on GitHub</a>
+      </div>
+    </section>
+
+    <section class="features" id="features">
+      <h2>Why Emerald?</h2>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <h3>Zero Setup</h3>
+          <p>Download the exe, add it to PATH, and you're done. No dependencies, no runtime, no npm install.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Readable Syntax</h3>
+          <p>Clean, minimal syntax inspired by a blend of scripting languages. What you see is what you get.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Built-in Updater</h3>
+          <p>Run <code>emerald update</code> and it fetches the latest version automatically. Stay current without effort.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="download" id="download">
+      <h2>Get Emerald</h2>
+      <p class="download-info">Download the latest release for Windows. Run the installer and you're all set.</p>
+      <div class="download-card">
+        <div class="version-badge" id="version-badge">v0.1.0</div>
+        <div class="download-details">
+          <span class="platform">Windows (x86_64)</span>
+          <span class="size" id="file-size">~5 MB</span>
+        </div>
+        <a href="https://github.com/hannogeo/emerald/releases/latest/download/emerald-installer.exe" target="_blank" rel="noopener noreferrer" class="btn primary large" id="download-btn">Download emerald-installer.exe</a>
+        <p class="footnote">Or run <code>emerald update</code> once you have it installed. <a href="https://github.com/hannogeo/emerald/releases" target="_blank" rel="noopener noreferrer">All releases</a></p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Emerald - built with Go</p>
+    <p class="small"><a href="https://github.com/hannogeo/emerald" target="_blank">GitHub</a></p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
