@@ -6,102 +6,7 @@
   <title>Emerald - Docs</title>
   <link rel="icon" type="image/png" href="emerald.png">
   <link rel="stylesheet" href="style.css">
-  <style>
-    .docs-page {
-      padding: 7rem 0 4rem;
-    }
-    .docs-page h2 {
-      text-align: left;
-      margin-top: 3rem;
-      margin-bottom: 1.5rem;
-      padding-bottom: .5rem;
-      border-bottom: 1px solid var(--border);
-      font-size: 1.6rem;
-    }
-    .docs-page h2:first-child {
-      margin-top: 0;
-    }
-    .docs-page h3 {
-      font-size: 1.15rem;
-      margin-top: 2rem;
-      margin-bottom: .75rem;
-    }
-    .docs-page p {
-      color: var(--text2);
-      margin-bottom: 1rem;
-      line-height: 1.7;
-    }
-    .docs-page ul {
-      color: var(--text2);
-      margin-bottom: 1rem;
-      padding-left: 1.5rem;
-      line-height: 1.8;
-    }
-    .docs-page pre {
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 1rem 1.25rem;
-      font-family: var(--font);
-      font-size: .85rem;
-      line-height: 1.6;
-      overflow-x: auto;
-      margin-bottom: 1.25rem;
-    }
-    .docs-page pre .kw { color: #ff7b72; }
-    .docs-page pre .fn { color: #79c0ff; }
-    .docs-page pre .str { color: #a5d6ff; }
-    .docs-page pre .num { color: #79c0ff; }
-    .docs-page pre .cm { color: #8b949e; font-style: italic; }
-    .docs-page pre .op { color: #ffa657; }
-    .docs-page code {
-      font-family: var(--font);
-      font-size: .85em;
-      background: var(--surface);
-      padding: .1em .4em;
-      border-radius: 3px;
-      font-variant-ligatures: none;
-    }
-    .docs-page table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 1.25rem;
-      font-size: .9rem;
-    }
-    .docs-page th, .docs-page td {
-      border: 1px solid var(--border);
-      padding: .6rem .8rem;
-      text-align: left;
-    }
-    .docs-page th {
-      background: var(--bg3);
-      color: var(--text);
-      font-weight: 600;
-    }
-    .docs-page td {
-      color: var(--text2);
-    }
-    .syntax-diagram {
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: .6rem 1rem;
-      font-family: var(--font);
-      font-size: .8rem;
-      color: var(--text2);
-      margin-bottom: 1.25rem;
-    }
-    .back-link {
-      display: inline-block;
-      margin-bottom: 2rem;
-      color: var(--accent);
-      text-decoration: none;
-      font-size: .9rem;
-    }
-    .back-link:hover {
-      text-decoration: underline;
-    }
-  </style>
+  <link rel="stylesheet" href="docs.css">
 </head>
 <body>
   <header>
@@ -112,33 +17,57 @@
     </nav>
   </header>
 
+  <button class="toc-btn" id="tocBtn" aria-label="Table of contents">&#9776;</button>
+  <div class="toc-overlay" id="tocOverlay"></div>
+  <nav class="toc" id="toc">
+    <h3>Sections</h3>
+    <a href="#getting-started" class="h2-link" data-target="getting-started">1. Getting Started</a>
+    <a href="#installation" class="h3-link" data-target="installation">1.1 Installation</a>
+    <a href="#hello-world" class="h3-link" data-target="hello-world">1.2 Hello World</a>
+    <a href="#comments" class="h2-link" data-target="comments">2. Comments</a>
+    <a href="#variables" class="h2-link" data-target="variables">3. Variables</a>
+    <a href="#data-types" class="h2-link" data-target="data-types">4. Data Types</a>
+    <a href="#string-interpolation" class="h3-link" data-target="string-interpolation">4.1 String Interpolation</a>
+    <a href="#operators" class="h2-link" data-target="operators">5. Operators</a>
+    <a href="#print" class="h2-link" data-target="print">6. Print</a>
+    <a href="#conditionals" class="h2-link" data-target="conditionals">7. Conditionals</a>
+    <a href="#loops" class="h2-link" data-target="loops">8. Loops</a>
+    <a href="#numeric-range" class="h3-link" data-target="numeric-range">8.1 Numeric Range</a>
+    <a href="#list-iteration" class="h3-link" data-target="list-iteration">8.2 List Iteration</a>
+    <a href="#functions" class="h2-link" data-target="functions">9. Functions</a>
+    <a href="#lists" class="h2-link" data-target="lists">10. Lists</a>
+    <a href="#input" class="h2-link" data-target="input">11. Input</a>
+    <a href="#builtins" class="h2-link" data-target="builtins">12. Built-in Functions</a>
+    <a href="#cli" class="h2-link" data-target="cli">13. CLI Usage</a>
+  </nav>
+
   <main class="docs-page">
     <a href="index.html" class="back-link">&larr; Back to Home</a>
     <h1>Emerald Language Docs</h1>
     <p>A tiny, interpreted language that gets out of your way.</p>
 
-    <h2>Getting Started</h2>
-    <h3>Installation</h3>
+    <h2 id="getting-started">1. Getting Started</h2>
+    <h3 id="installation">1.1 Installation</h3>
     <p>Download the latest release, add it to your PATH, and you're done. That's it.</p>
     <p>Once installed, run any Emerald files with:</p>
     <pre>emerald fileName.emld</pre>
 
-    <h3>Hello World</h3>
+    <h3 id="hello-world">1.2 Hello World</h3>
     <pre><span class="kw">print</span> <span class="str">"Hello, World!"</span></pre>
 
-    <h2>Comments</h2>
+    <h2 id="comments">2. Comments</h2>
     <p>Comments start with <code>!</code> and run to the end of the line.</p>
     <pre><span class="cm">! This is a comment</span>
 <span class="kw">print</span> <span class="str">"hello"</span> <span class="cm">! inline comment</span></pre>
 
-    <h2>Variables</h2>
+    <h2 id="variables">3. Variables</h2>
     <p>All variables are global. Declaration uses the <code>var.</code> prefix.</p>
-    <pre><span class="kw">var</span>.<span class="fn">name</span> <span class="str">"Alice"</span>
-<span class="kw">var</span>.<span class="fn">age</span> <span class="num">30</span>
-<span class="kw">var</span>.<span class="fn">isCool</span> <span class="kw">True</span>
+    <pre><span class="kw">var</span>.<span class="fn">name</span> <span class="str">"Hanno"</span>
+<span class="kw">var</span>.<span class="fn">age</span> <span class="num">67</span>
+<span class="kw">var</span>.<span class="fn">isCool</span> <span class="kw">False</span>
 <span class="kw">var</span>.<span class="fn">nothing</span> <span class="kw">Null</span></pre>
 
-    <h2>Data Types</h2>
+    <h2 id="data-types">4. Data Types</h2>
     <table>
       <tr><th>Type</th><th>Examples</th><th>Notes</th></tr>
       <tr><td>number</td><td><code>42</code>, <code>3.14</code></td><td>Stored as float64, printed as integer when whole</td></tr>
@@ -148,15 +77,15 @@
       <tr><td>list</td><td><code>(1, 2, 3)</code></td><td>Parenthesised, comma-separated. 1-indexed.</td></tr>
     </table>
 
-    <h3>String Interpolation</h3>
-    <p>Use <code>$"..."</code> to embed expressions inside strings. Non-string values must be explicitly converted with <code>str()</code> -- no automatic coercion.</p>
+    <h3 id="string-interpolation">4.1 String Interpolation</h3>
+    <p>Use <code>$"..."</code> to embed expressions inside strings. Non-string values must be explicitly converted with <code>str()</code> - no automatic coercion.</p>
     <pre><span class="kw">var</span>.<span class="fn">name</span> <span class="str">"World"</span>
 <span class="kw">print</span> <span class="str">$"Hello, {</span><span class="fn">name</span><span class="str">}!"</span>     <span class="cm">! Hello, World!</span>
 
 <span class="kw">var</span>.<span class="fn">score</span> <span class="num">42</span>
 <span class="kw">print</span> <span class="str">$"Score: {</span><span class="fn">str</span>(<span class="fn">score</span>)<span class="str">}"</span>  <span class="cm">! Score: 42</span></pre>
 
-    <h2>Operators</h2>
+    <h2 id="operators">5. Operators</h2>
     <table>
       <tr><th>Operator</th><th>Operation</th><th>Works on</th></tr>
       <tr><td><code>+</code></td><td>Addition / concatenation</td><td>number + number, string + string</td></tr>
@@ -176,14 +105,14 @@
 <span class="kw">print</span> <span class="fn">x</span> <span class="op">/</span> <span class="fn">y</span>    <span class="cm">! 3.33333</span>
 <span class="kw">print</span> <span class="fn">x</span> <span class="op">></span> <span class="num">5</span>    <span class="cm">! True</span></pre>
 
-    <h2>Print</h2>
+    <h2 id="print">6. Print</h2>
     <p>The <code>print</code> statement evaluates an expression and outputs it to stdout with a trailing newline.</p>
     <pre><span class="kw">print</span> <span class="str">"Hello"</span>
-<span class="kw">print</span> <span class="num">42</span>
+<span class="kw">print</span> <span class="num">123</span>
 <span class="kw">print</span> <span class="fn">myVar</span>
 <span class="kw">print</span> <span class="str">$"The value is {</span><span class="fn">str</span>(<span class="fn">x</span>)<span class="str">}"</span></pre>
 
-    <h2>Conditionals</h2>
+    <h2 id="conditionals">7. Conditionals</h2>
     <p><code>if</code>, <code>elif</code>, and <code>else</code> for branching. Conditions must evaluate to a boolean.</p>
     <pre><span class="kw">if</span> <span class="fn">x</span> <span class="op">></span> <span class="num">5</span> {
   <span class="kw">print</span> <span class="str">"big"</span>
@@ -195,10 +124,10 @@
   <span class="kw">print</span> <span class="str">"small or zero"</span>
 }</pre>
 
-    <h2>Loops</h2>
+    <h2 id="loops">8. Loops</h2>
     <p>The <code>for...in</code> loop iterates over a range or a list variable.</p>
 
-    <h3>Numeric Range</h3>
+    <h3 id="numeric-range">8.1 Numeric Range</h3>
     <p>Use <code>range:N</code> to loop from 1 to N inclusive. Use <code>range:(start, end)</code> for a custom range.</p>
     <pre><span class="kw">for</span> <span class="fn">i</span> <span class="kw">in</span> <span class="kw">range</span>:<span class="num">5</span> {
   <span class="kw">print</span> <span class="fn">i</span>
@@ -210,14 +139,14 @@
 }
 <span class="cm">! prints 0 1 2 3</span></pre>
 
-    <h3>List Iteration</h3>
+    <h3 id="list-iteration">8.2 List Iteration</h3>
     <pre><span class="kw">var</span>.<span class="fn">fruits</span> (<span class="str">"apple"</span>, <span class="str">"banana"</span>, <span class="str">"cherry"</span>)
 
 <span class="kw">for</span> <span class="fn">fruit</span> <span class="kw">in</span> <span class="fn">fruits</span> {
   <span class="kw">print</span> <span class="fn">fruit</span>
 }</pre>
 
-    <h2>Functions</h2>
+    <h2 id="functions">9. Functions</h2>
     <p>Functions are defined with <code>fn.</code> and called with <code>run.</code>. Functions have no parameters and no return value.</p>
     <pre><span class="kw">fn</span>.<span class="fn">greet</span> {
   <span class="kw">print</span> <span class="str">"Hello!"</span>
@@ -230,7 +159,7 @@
 <span class="kw">run</span>.<span class="fn">greet</span>
 <span class="kw">run</span>.<span class="fn">sayName</span></pre>
 
-    <h2>Lists</h2>
+    <h2 id="lists">10. Lists</h2>
     <p>Lists are parenthesised, comma-separated values. They are 1-indexed.</p>
 
     <pre><span class="cm">! Create a list</span>
@@ -246,12 +175,12 @@
 <span class="cm">! Empty list</span>
 <span class="kw">var</span>.<span class="fn">empty</span> ()</pre>
 
-    <h2>Input</h2>
+    <h2 id="input">11. Input</h2>
     <p>Read a line from stdin with an optional prompt. Returns a string.</p>
     <pre><span class="kw">var</span>.<span class="fn">name</span> <span class="kw">input</span> <span class="str">"Enter your name: "</span>
 <span class="kw">print</span> <span class="str">$"Hello, {</span><span class="fn">name</span><span class="str">}!"</span></pre>
 
-    <h2>Built-in Functions</h2>
+    <h2 id="builtins">12. Built-in Functions</h2>
     <table>
       <tr><th>Function</th><th>Description</th><th>Example</th></tr>
       <tr>
@@ -266,7 +195,7 @@
       </tr>
     </table>
 
-    <h2>CLI Usage</h2>
+    <h2 id="cli">13. CLI Usage</h2>
     <pre>emerald &lt;file.emld&gt;     Run a script
 emerald update          Self-update to the latest version
 emerald version         Print version number</pre>
@@ -277,5 +206,7 @@ emerald version         Print version number</pre>
     <p>Emerald - built with Go</p>
     <p class="small"><a href="https://github.com/hannogeo/emerald" target="_blank" rel="noopener noreferrer">GitHub</a></p>
   </footer>
+
+  <script src="docs.js"></script>
 </body>
 </html>
