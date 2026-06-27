@@ -30,7 +30,19 @@ func (i *Interpreter) evalIfStatement(stmt *ast.IfStatement) error {
 	}
 	condBool, ok := cond.(bool)
 	if !ok {
-		return fmt.Errorf("condition must be a boolean, got %s", typeName(cond))
+		switch v := cond.(type) {
+		case *notValue:
+			condBool = !isTruthy(v.Value)
+		case *orValue:
+			for _, val := range v.Values {
+				if isTruthy(val) {
+					condBool = true
+					break
+				}
+			}
+		default:
+			return fmt.Errorf("condition must be a boolean, got %s", typeName(cond))
+		}
 	}
 
 	if condBool {

@@ -27,7 +27,7 @@
     },
     "operators": {
       "name": "keyword.operator.emerald",
-      "match": "=|<=|>=|<|>"
+      "match": "\\+=|-=|\\*=|/=|:|=|<=|>=|<|>"
     },
     "keywords": {
       "patterns": [
@@ -41,7 +41,7 @@
         },
         {
           "name": "keyword.control.add.emerald",
-          "match": "\\badd\\."
+          "match": "\\badd\\b"
         },
         {
           "name": "keyword.control.func.emerald",
@@ -49,7 +49,7 @@
         },
         {
           "name": "keyword.control.run.emerald",
-          "match": "\\brun\\."
+          "match": "\\brun\\b"
         },
         {
           "name": "keyword.control.print.emerald",
@@ -78,6 +78,14 @@
         {
           "name": "keyword.control.range.emerald",
           "match": "\\brange:"
+        },
+        {
+          "name": "keyword.operator.emerald",
+          "match": "\\bnot\\b"
+        },
+        {
+          "name": "keyword.operator.emerald",
+          "match": "\\bor\\b"
         }
       ]
     },

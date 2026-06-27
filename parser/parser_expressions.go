@@ -193,6 +193,14 @@ func (p *Parser) parseInputExpression() ast.Expression {
 	return &ast.InputExpression{Prompt: expr}
 }
 
+func (p *Parser) parsePrefixExpression() ast.Expression {
+	op := p.curToken.Literal
+	line := p.curToken.Line
+	p.nextToken()
+	right := p.parseExpression(PREFIX)
+	return &ast.PrefixExpression{Operator: op, Right: right, Line: line}
+}
+
 func (p *Parser) parseInfixExpression(left ast.Expression) ast.Expression {
 	op := p.curToken.Literal
 	line := p.curToken.Line

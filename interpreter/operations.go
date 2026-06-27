@@ -8,6 +8,17 @@ import (
 func binaryOperation(left interface{}, operator string, right interface{}, line int) (interface{}, error) {
 	switch operator {
 	case "=":
+		if ov, ok := right.(*orValue); ok {
+			for _, val := range ov.Values {
+				if matchEq(left, val) {
+					return true, nil
+				}
+			}
+			return false, nil
+		}
+		if nv, ok := right.(*notValue); ok {
+			return left != nv.Value, nil
+		}
 		return left == right, nil
 	case "<", ">", "<=", ">=":
 		lNum, ok1 := left.(float64)
@@ -107,6 +118,13 @@ func stringOp(left string, operator string, right interface{}, line int) (interf
 	}
 }
 
+func matchEq(left interface{}, val interface{}) bool {
+	if nv, ok := val.(*notValue); ok {
+		return left != nv.Value
+	}
+	return left == val
+}
+
 func typeName(val interface{}) string {
 	switch val.(type) {
 	case string:
@@ -117,6 +135,10 @@ func typeName(val interface{}) string {
 		return "boolean"
 	case nil:
 		return "Null"
+	case *notValue:
+		return "not"
+	case *orValue:
+		return "or"
 	default:
 		return "unknown"
 	}

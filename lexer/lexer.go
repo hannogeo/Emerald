@@ -69,20 +69,44 @@ func (l *Lexer) NextToken() Token {
 		tok = l.readIdentifierOrKeyword()
 
 	case l.ch == '+':
-		tok = Token{Type: PLUS, Literal: "+", Line: l.line, Col: l.col}
-		l.readChar()
+		if l.peekChar() == '=' {
+			tok = Token{Type: PLUS_EQ, Literal: "+=", Line: l.line, Col: l.col}
+			l.readChar()
+			l.readChar()
+		} else {
+			tok = Token{Type: PLUS, Literal: "+", Line: l.line, Col: l.col}
+			l.readChar()
+		}
 
 	case l.ch == '-':
-		tok = Token{Type: MINUS, Literal: "-", Line: l.line, Col: l.col}
-		l.readChar()
+		if l.peekChar() == '=' {
+			tok = Token{Type: MINUS_EQ, Literal: "-=", Line: l.line, Col: l.col}
+			l.readChar()
+			l.readChar()
+		} else {
+			tok = Token{Type: MINUS, Literal: "-", Line: l.line, Col: l.col}
+			l.readChar()
+		}
 
 	case l.ch == '*':
-		tok = Token{Type: ASTERISK, Literal: "*", Line: l.line, Col: l.col}
-		l.readChar()
+		if l.peekChar() == '=' {
+			tok = Token{Type: ASTERISK_EQ, Literal: "*=", Line: l.line, Col: l.col}
+			l.readChar()
+			l.readChar()
+		} else {
+			tok = Token{Type: ASTERISK, Literal: "*", Line: l.line, Col: l.col}
+			l.readChar()
+		}
 
 	case l.ch == '/':
-		tok = Token{Type: SLASH, Literal: "/", Line: l.line, Col: l.col}
-		l.readChar()
+		if l.peekChar() == '=' {
+			tok = Token{Type: SLASH_EQ, Literal: "/=", Line: l.line, Col: l.col}
+			l.readChar()
+			l.readChar()
+		} else {
+			tok = Token{Type: SLASH, Literal: "/", Line: l.line, Col: l.col}
+			l.readChar()
+		}
 
 	case l.ch == '(':
 		tok = Token{Type: LPAREN, Literal: "(", Line: l.line, Col: l.col}

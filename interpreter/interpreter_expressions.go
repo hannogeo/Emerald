@@ -35,10 +35,23 @@ func (i *Interpreter) evalExpression(expr ast.Expression) (interface{}, error) {
 		return i.evalCallExpression(e)
 	case *ast.ListIndexExpression:
 		return i.evalListIndexExpression(e)
+	case *ast.PrefixExpression:
+		return i.evalPrefixExpression(e)
 	case *ast.ListSliceExpression:
 		return i.evalListSliceExpression(e)
 	}
 	return nil, fmt.Errorf("unknown expression type")
+}
+
+func (i *Interpreter) evalPrefixExpression(e *ast.PrefixExpression) (interface{}, error) {
+	right, err := i.evalExpression(e.Right)
+	if err != nil {
+		return nil, err
+	}
+	if e.Operator == "not" {
+		return &notValue{Value: right}, nil
+	}
+	return nil, fmt.Errorf("unknown prefix operator '%s' at line %d", e.Operator, e.Line)
 }
 
 func (i *Interpreter) evalBinaryExpression(e *ast.BinaryExpression) (interface{}, error) {
@@ -46,6 +59,15 @@ func (i *Interpreter) evalBinaryExpression(e *ast.BinaryExpression) (interface{}
 	if err != nil {
 		return nil, err
 	}
+
+	if e.Operator == "or" {
+		right, err := i.evalExpression(e.Right)
+		if err != nil {
+			return nil, err
+		}
+		return mergeOrValues(left, right), nil
+	}
+
 	right, err := i.evalExpression(e.Right)
 	if err != nil {
 		return nil, err

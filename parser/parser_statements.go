@@ -45,6 +45,35 @@ func (p *Parser) parseVarStatement() *ast.VarStatement {
 	stmt.Name = p.curToken.Literal
 	p.nextToken()
 
+	compoundOp := ""
+	switch p.curToken.Type {
+	case lexer.PLUS_EQ:
+		compoundOp = "+"
+	case lexer.MINUS_EQ:
+		compoundOp = "-"
+	case lexer.ASTERISK_EQ:
+		compoundOp = "*"
+	case lexer.SLASH_EQ:
+		compoundOp = "/"
+	}
+
+	if compoundOp != "" {
+		p.nextToken()
+		rhs := p.parseExpression(LOWEST)
+		if rhs == nil {
+			return nil
+		}
+		stmt.Value = &ast.BinaryExpression{
+			Left:     &ast.Identifier{Value: stmt.Name},
+			Operator: compoundOp,
+			Right:    rhs,
+		}
+		for p.curToken.Type != lexer.NEWLINE && p.curToken.Type != lexer.EOF {
+			p.nextToken()
+		}
+		return stmt
+	}
+
 	expr := p.parseExpression(LOWEST)
 	if expr == nil {
 		return nil

@@ -110,6 +110,17 @@ type Identifier struct {
 func (i *Identifier) expressionNode() {}
 func (i *Identifier) String() string  { return i.Value }
 
+type PrefixExpression struct {
+	Operator string
+	Right    Expression
+	Line     int
+}
+
+func (pe *PrefixExpression) expressionNode() {}
+func (pe *PrefixExpression) String() string {
+	return fmt.Sprintf("(%s %s)", pe.Operator, pe.Right.String())
+}
+
 type BinaryExpression struct {
 	Left     Expression
 	Operator string

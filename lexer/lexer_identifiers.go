@@ -66,6 +66,12 @@ func (l *Lexer) readIdentifierOrKeyword() Token {
 	case "in":
 		tok.Type = IN
 		tok.Literal = word
+	case "not":
+		tok.Type = NOT
+		tok.Literal = word
+	case "or":
+		tok.Type = OR
+		tok.Literal = word
 	default:
 		tok.Type = IDENTIFIER
 		tok.Literal = word

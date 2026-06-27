@@ -22,11 +22,13 @@ type Parser struct {
 const (
 	_ int = iota
 	LOWEST
-	EQUALS
-	LESSGREATER
-	SUM
-	PRODUCT
-	CALL
+	EQUALS      // =
+	OR          // or
+	LESSGREATER // < > <= >=
+	SUM         // + -
+	PRODUCT     // * /
+	CALL        // ()
+	PREFIX
 )
 
 func NewParser(l *lexer.Lexer) *Parser {
@@ -44,6 +46,7 @@ func NewParser(l *lexer.Lexer) *Parser {
 	p.registerPrefix(lexer.BOOLEAN, p.parseBooleanLiteral)
 	p.registerPrefix(lexer.NULL, p.parseNullLiteral)
 	p.registerPrefix(lexer.LPAREN, p.parseGroupedExpression)
+	p.registerPrefix(lexer.NOT, p.parsePrefixExpression)
 
 	p.registerInfix(lexer.PLUS, p.parseInfixExpression)
 	p.registerInfix(lexer.MINUS, p.parseInfixExpression)
@@ -54,6 +57,7 @@ func NewParser(l *lexer.Lexer) *Parser {
 	p.registerInfix(lexer.GT, p.parseInfixExpression)
 	p.registerInfix(lexer.LE, p.parseInfixExpression)
 	p.registerInfix(lexer.GE, p.parseInfixExpression)
+	p.registerInfix(lexer.OR, p.parseInfixExpression)
 
 	p.nextToken()
 	p.nextToken()
@@ -100,6 +104,8 @@ func (p *Parser) peekPrecedence() int {
 		switch p.peekToken.Type {
 		case lexer.EQ:
 			return EQUALS
+		case lexer.OR:
+			return OR
 		case lexer.LT, lexer.GT, lexer.LE, lexer.GE:
 			return LESSGREATER
 		case lexer.PLUS, lexer.MINUS:
@@ -117,6 +123,8 @@ func (p *Parser) curPrecedence() int {
 	switch p.curToken.Type {
 	case lexer.EQ:
 		return EQUALS
+	case lexer.OR:
+		return OR
 	case lexer.LT, lexer.GT, lexer.LE, lexer.GE:
 		return LESSGREATER
 	case lexer.PLUS, lexer.MINUS:
