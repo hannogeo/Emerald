@@ -19,8 +19,8 @@
         "extensions": [".emld"],
         "configuration": "./language-configuration.json",
         "icon": {
-          "light": "./emerald.png",
-          "dark": "./emerald.png"
+          "light": "./emerald.svg",
+          "dark": "./emerald.svg"
         }
       }
     ],

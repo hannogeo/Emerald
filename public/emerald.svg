@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="g7" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0d6b2b"/>
+      <stop offset="50%" stop-color="#2ea043"/>
+      <stop offset="100%" stop-color="#56d364"/>
+    </linearGradient>
+    <linearGradient id="g7top" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#1f8a3d"/>
+      <stop offset="100%" stop-color="#4bcf5a"/>
+    </linearGradient>
+    <linearGradient id="g7bot" x1="100%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0a521f"/>
+      <stop offset="100%" stop-color="#1a7f37"/>
+    </linearGradient>
+  </defs>
+  <polygon points="32,4 54,18 54,46 32,60 10,46 10,18" fill="url(#g7)"/>
+  <polygon points="32,4 32,60 10,46 10,18" fill="rgba(0,0,0,.2)"/>
+  <polygon points="32,60 54,46 54,18" fill="rgba(255,255,255,.08)"/>
+  <polygon points="32,4 54,18 32,30" fill="url(#g7top)" opacity=".65"/>
+  <polygon points="32,30 10,18 32,4" fill="url(#g7top)" opacity=".35"/>
+  <polygon points="32,30 54,46 32,50" fill="rgba(255,255,255,.06)"/>
+  <polygon points="32,50 10,46 32,30" fill="url(#g7bot)" opacity=".5"/>
+</svg>
