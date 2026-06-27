@@ -1,0 +1,122 @@
+{
+  "scopeName": "source.emld",
+  "name": "Emerald",
+  "patterns": [
+    { "include": "#comments" },
+    { "include": "#keywords" },
+    { "include": "#strings" },
+    { "include": "#interpolated-strings" },
+    { "include": "#numbers" },
+    { "include": "#booleans" },
+    { "include": "#null" },
+    { "include": "#functions" },
+    { "include": "#operators" }
+  ],
+  "repository": {
+    "comments": {
+      "name": "comment.line.emerald",
+      "match": "!.*$"
+    },
+    "null": {
+      "name": "constant.language.null.emerald",
+      "match": "\\bNull\\b"
+    },
+    "functions": {
+      "name": "support.function.emerald",
+      "match": "\\b(str|num)\\b"
+    },
+    "operators": {
+      "name": "keyword.operator.emerald",
+      "match": "=|<=|>=|<|>"
+    },
+    "keywords": {
+      "patterns": [
+        {
+          "name": "keyword.control.var.emerald",
+          "match": "\\bvar\\."
+        },
+        {
+          "name": "keyword.control.input.emerald",
+          "match": "\\binput\\b"
+        },
+        {
+          "name": "keyword.control.add.emerald",
+          "match": "\\badd\\."
+        },
+        {
+          "name": "keyword.control.func.emerald",
+          "match": "\\bfn\\."
+        },
+        {
+          "name": "keyword.control.run.emerald",
+          "match": "\\brun\\."
+        },
+        {
+          "name": "keyword.control.print.emerald",
+          "match": "\\bprint\\b"
+        },
+        {
+          "name": "keyword.control.if.emerald",
+          "match": "\\bif\\b"
+        },
+        {
+          "name": "keyword.control.elif.emerald",
+          "match": "\\belif\\b"
+        },
+        {
+          "name": "keyword.control.else.emerald",
+          "match": "\\belse\\b"
+        },
+        {
+          "name": "keyword.control.for.emerald",
+          "match": "\\bfor\\b"
+        },
+        {
+          "name": "keyword.control.in.emerald",
+          "match": "\\bin\\b"
+        },
+        {
+          "name": "keyword.control.range.emerald",
+          "match": "\\brange:"
+        }
+      ]
+    },
+    "interpolated-strings": {
+      "name": "string.quoted.double.emerald",
+      "begin": "\\$\"",
+      "end": "\"(?!\")",
+      "patterns": [
+        {
+          "include": "#interpolation"
+        },
+        {
+          "name": "constant.character.escape.emerald",
+          "match": "\\\\."
+        }
+      ]
+    },
+    "interpolation": {
+      "name": "variable.other.emerald",
+      "match": "\\{[a-zA-Z_][a-zA-Z0-9_]*\\}"
+    },
+    "strings": {
+      "name": "string.quoted.double.emerald",
+      "begin": "\"",
+      "end": "\"(?!\")",
+      "patterns": [
+        {
+          "name": "constant.character.escape.emerald",
+          "match": "\\\\."
+        }
+      ]
+    },
+    "numbers": {
+      "name": "constant.numeric.emerald",
+      "match": "\\b\\d+(\\.\\d+)?\\b"
+    },
+    "booleans": {
+      "name": "constant.language.boolean.emerald",
+      "match": "\\b(True|False)\\b"
+    }
+  }
+}

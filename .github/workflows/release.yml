@@ -29,6 +29,9 @@ jobs:
       - name: Build emerald-installer.exe
         run: GOOS=windows GOARCH=amd64 go build -o emerald-installer.exe ./installer
 
+      - name: Package VS Code extension
+        run: cd vscode-emerald && zip -r ../emerald-vscode.zip .
+
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
@@ -38,3 +41,4 @@ jobs:
           files: |
             emerald.exe
             emerald-installer.exe
+            emerald-vscode.zip

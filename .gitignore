@@ -15,7 +15,6 @@ emerald.exe
 
 # IDE
 .vscode/
-vscode-emerald/
 .idea/
 *.swp
 *.swo

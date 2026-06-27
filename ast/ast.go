@@ -175,7 +175,7 @@ type RunStatement struct {
 }
 
 func (rs *RunStatement) statementNode() {}
-func (rs *RunStatement) String() string { return fmt.Sprintf("run.%s", rs.Name) }
+func (rs *RunStatement) String() string { return fmt.Sprintf("run %s", rs.Name) }
 
 type AddStatement struct {
 	Name  string

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"archive/zip"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -59,12 +60,14 @@ func main() {
 		os.Exit(1)
 	}
 
-	var downloadURL, assetName string
+	var downloadURL, assetName, vscodeZipURL string
 	for _, asset := range release.Assets {
-		if asset.Name == "emerald.exe" {
+		switch asset.Name {
+		case "emerald.exe":
 			downloadURL = asset.BrowserDownloadURL
 			assetName = asset.Name
-			break
+		case "emerald-vscode.zip":
+			vscodeZipURL = asset.BrowserDownloadURL
 		}
 	}
 
@@ -101,6 +104,10 @@ func main() {
 
 	fmt.Println("Download complete!")
 
+	if vscodeZipURL != "" {
+		installVscodeExtension(vscodeZipURL, installDir)
+	}
+
 	path := os.Getenv("PATH")
 	if !strings.Contains(path, installDir) {
 		fmt.Println("Adding to PATH...")
@@ -119,4 +126,77 @@ func main() {
 
 	fmt.Printf("\nEmerald v%s installed successfully!\n", strings.TrimPrefix(release.TagName, "v"))
 	fmt.Println("Run 'emerald version' to verify.")
+}
+
+func installVscodeExtension(zipURL, installDir string) {
+	extDir := filepath.Join(installDir, "vscode-emerald")
+	zipPath := filepath.Join(installDir, "emerald-vscode.zip")
+
+	fmt.Println("Downloading VS Code extension...")
+	out, err := os.Create(zipPath)
+	if err != nil {
+		fmt.Println("Warning: could not download VS Code extension.")
+		return
+	}
+
+	resp, err := http.Get(zipURL)
+	if err != nil {
+		out.Close()
+		os.Remove(zipPath)
+		fmt.Println("Warning: could not download VS Code extension.")
+		return
+	}
+	defer resp.Body.Close()
+
+	_, err = io.Copy(out, resp.Body)
+	out.Close()
+	if err != nil {
+		os.Remove(zipPath)
+		fmt.Println("Warning: could not download VS Code extension.")
+		return
+	}
+
+	zr, err := zip.OpenReader(zipPath)
+	if err != nil {
+		os.Remove(zipPath)
+		fmt.Println("Warning: could not read VS Code extension package.")
+		return
+	}
+	defer zr.Close()
+
+	os.RemoveAll(extDir)
+	os.MkdirAll(extDir, 0755)
+
+	for _, f := range zr.File {
+		fpath := filepath.Join(extDir, f.Name)
+		if f.FileInfo().IsDir() {
+			os.MkdirAll(fpath, 0755)
+			continue
+		}
+		os.MkdirAll(filepath.Dir(fpath), 0755)
+		r, err := f.Open()
+		if err != nil {
+			continue
+		}
+		out, err := os.Create(fpath)
+		if err != nil {
+			r.Close()
+			continue
+		}
+		io.Copy(out, r)
+		out.Close()
+		r.Close()
+	}
+
+	os.Remove(zipPath)
+
+	fmt.Println("Installing VS Code extension...")
+	cmd := exec.Command("code", "--install-extension", extDir)
+	if err := cmd.Run(); err != nil {
+		fmt.Println("VS Code not found. To install manually, run:")
+		fmt.Println("  code --install-extension \"" + extDir + "\"")
+		return
+	}
+
+	fmt.Println("VS Code extension installed.")
 }

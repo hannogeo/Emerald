@@ -29,13 +29,6 @@ func (l *Lexer) readIdentifierOrKeyword() Token {
 		return tok
 	}
 
-	if word == "run" && l.ch == '.' {
-		l.readChar()
-		tok.Type = RUN
-		tok.Literal = "run."
-		return tok
-	}
-
 	if word == "range" && l.ch == ':' {
 		l.readChar()
 		tok.Type = RANGE
@@ -70,6 +63,9 @@ func (l *Lexer) readIdentifierOrKeyword() Token {
 		tok.Literal = word
 	case "for":
 		tok.Type = FOR
+		tok.Literal = word
+	case "run":
+		tok.Type = RUN
 		tok.Literal = word
 	case "in":
 		tok.Type = IN
