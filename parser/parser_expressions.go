@@ -35,6 +35,9 @@ func (p *Parser) parseIdentifierOrCall() ast.Expression {
 	if p.peekToken.Type == lexer.LPAREN {
 		return p.parseCallExpression()
 	}
+	if p.peekToken.Type == lexer.COLON {
+		return p.parseListAccess()
+	}
 	return p.parseIdentifier()
 }
 
@@ -52,6 +55,44 @@ func (p *Parser) parseCallExpression() ast.Expression {
 		p.nextToken()
 	}
 	return &ast.CallExpression{Function: name, Argument: arg, Line: line}
+}
+
+func (p *Parser) parseListAccess() ast.Expression {
+	name := p.curToken.Literal
+	line := p.curToken.Line
+	p.nextToken()
+	p.nextToken()
+
+	if p.curToken.Type == lexer.LPAREN {
+		expr := p.parseGroupedExpression()
+		if listLit, ok := expr.(*ast.ListLiteral); ok && len(listLit.Elements) == 2 {
+			return &ast.ListSliceExpression{
+				Name:  name,
+				Start: listLit.Elements[0],
+				End:   listLit.Elements[1],
+				Line:  line,
+			}
+		}
+		if listLit, ok := expr.(*ast.ListLiteral); ok && len(listLit.Elements) == 1 {
+			return &ast.ListIndexExpression{
+				Name:  name,
+				Index: listLit.Elements[0],
+				Line:  line,
+			}
+		}
+		return &ast.ListIndexExpression{
+			Name:  name,
+			Index: expr,
+			Line:  line,
+		}
+	}
+
+	index := p.parseExpression(LOWEST)
+	return &ast.ListIndexExpression{
+		Name:  name,
+		Index: index,
+		Line:  line,
+	}
 }
 
 func (p *Parser) parseNumberLiteral() ast.Expression {

@@ -15,13 +15,6 @@ func (l *Lexer) readIdentifierOrKeyword() Token {
 		return tok
 	}
 
-	if word == "add" && l.ch == '.' {
-		l.readChar()
-		tok.Type = ADD
-		tok.Literal = "add."
-		return tok
-	}
-
 	if word == "fn" && l.ch == '.' {
 		l.readChar()
 		tok.Type = FUNC
@@ -63,6 +56,9 @@ func (l *Lexer) readIdentifierOrKeyword() Token {
 		tok.Literal = word
 	case "for":
 		tok.Type = FOR
+		tok.Literal = word
+	case "add":
+		tok.Type = ADD
 		tok.Literal = word
 	case "run":
 		tok.Type = RUN

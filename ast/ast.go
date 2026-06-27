@@ -183,7 +183,7 @@ type AddStatement struct {
 }
 
 func (as *AddStatement) statementNode() {}
-func (as *AddStatement) String() string { return fmt.Sprintf("add.%s %s", as.Name, as.Value.String()) }
+func (as *AddStatement) String() string { return fmt.Sprintf("add %s %s", as.Name, as.Value.String()) }
 
 type InputExpression struct {
 	Prompt Expression
@@ -203,6 +203,29 @@ func (re *RangeExpression) String() string {
 		return fmt.Sprintf("range:%s", re.End.String())
 	}
 	return fmt.Sprintf("range:(%s, %s)", re.Start.String(), re.End.String())
+}
+
+type ListIndexExpression struct {
+	Name  string
+	Index Expression
+	Line  int
+}
+
+func (lie *ListIndexExpression) expressionNode() {}
+func (lie *ListIndexExpression) String() string {
+	return fmt.Sprintf("%s:%s", lie.Name, lie.Index.String())
+}
+
+type ListSliceExpression struct {
+	Name  string
+	Start Expression
+	End   Expression
+	Line  int
+}
+
+func (lse *ListSliceExpression) expressionNode() {}
+func (lse *ListSliceExpression) String() string {
+	return fmt.Sprintf("%s:(%s, %s)", lse.Name, lse.Start.String(), lse.End.String())
 }
 
 type ForStatement struct {

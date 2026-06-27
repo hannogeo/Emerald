@@ -128,6 +128,10 @@ func (l *Lexer) NextToken() Token {
 		tok = Token{Type: RBRACE, Literal: "}", Line: l.line, Col: l.col}
 		l.readChar()
 
+	case l.ch == ':':
+		tok = Token{Type: COLON, Literal: ":", Line: l.line, Col: l.col}
+		l.readChar()
+
 	default:
 		tok = Token{Type: ILLEGAL, Literal: string(l.ch), Line: l.line, Col: l.col}
 		l.readChar()

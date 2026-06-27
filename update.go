@@ -182,12 +182,39 @@ func installVscodeExtension(zipURL string) {
 
 	os.Remove(zipPath)
 
-	cmd := exec.Command("code", "--install-extension", extDir)
-	if err := cmd.Run(); err != nil {
+	codeCmd := findCodeCmd()
+	if codeCmd == "" {
 		fmt.Println("VS Code not found. Extension files are at:", extDir)
 		fmt.Println("Install VS Code, then run: code --install-extension \"" + extDir + "\"")
 		return
 	}
 
+	cmd := exec.Command(codeCmd, "--install-extension", extDir)
+	if err := cmd.Run(); err != nil {
+		fmt.Println("Warning: could not install VS Code extension.")
+		fmt.Println("To install manually, run: code --install-extension \"" + extDir + "\"")
+		return
+	}
+
 	fmt.Println("VS Code extension installed.")
+}
+
+func findCodeCmd() string {
+	if _, err := exec.LookPath("code"); err == nil {
+		return "code"
+	}
+	if _, err := exec.LookPath("code.cmd"); err == nil {
+		return "code.cmd"
+	}
+	commonPaths := []string{
+		filepath.Join(os.Getenv("LOCALAPPDATA"), "Programs", "Microsoft VS Code", "bin", "code.cmd"),
+		filepath.Join(os.Getenv("PROGRAMFILES"), "Microsoft VS Code", "bin", "code.cmd"),
+		filepath.Join(os.Getenv("PROGRAMFILES(X86)"), "Microsoft VS Code", "bin", "code.cmd"),
+	}
+	for _, p := range commonPaths {
+		if _, err := os.Stat(p); err == nil {
+			return p
+		}
+	}
+	return ""
 }

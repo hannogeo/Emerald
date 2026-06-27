@@ -166,11 +166,14 @@
 <span class="kw">var</span>.<span class="fn">items</span> (<span class="num">10</span>, <span class="num">20</span>, <span class="num">30</span>)
 
 <span class="cm">! Access by index (1-based)</span>
-<span class="kw">print</span> <span class="fn">items</span>(<span class="num">1</span>)  <span class="cm">! 10</span>
-<span class="kw">print</span> <span class="fn">items</span>(<span class="num">3</span>)  <span class="cm">! 30</span>
+<span class="kw">print</span> <span class="fn">items</span>:<span class="num">1</span>  <span class="cm">! 10</span>
+<span class="kw">print</span> <span class="fn">items</span>:<span class="num">3</span>  <span class="cm">! 30</span>
+
+<span class="cm">! Slice (items 2 and 3)</span>
+<span class="kw">print</span> <span class="fn">items</span>:(<span class="num">2</span>, <span class="num">3</span>)  <span class="cm">! (20, 30)</span>
 
 <span class="cm">! Add an element</span>
-<span class="kw">add</span>.<span class="fn">items</span> <span class="num">40</span>
+<span class="kw">add</span> <span class="fn">items</span> <span class="num">40</span>
 
 <span class="cm">! Empty list</span>
 <span class="kw">var</span>.<span class="fn">empty</span> ()</pre>

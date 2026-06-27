@@ -40,6 +40,7 @@ const (
 	FOR        TokenType = "FOR"
 	IN         TokenType = "IN"
 	RANGE      TokenType = "RANGE"
+	COLON      TokenType = "COLON"
 )
 
 type Token struct {
