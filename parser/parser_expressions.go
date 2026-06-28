@@ -35,9 +35,6 @@ func (p *Parser) parseIdentifierOrCall() ast.Expression {
 	if p.peekToken.Type == lexer.LPAREN {
 		return p.parseCallExpression()
 	}
-	if p.peekToken.Type == lexer.COLON {
-		return p.parseListAccess()
-	}
 	return p.parseIdentifier()
 }
 
@@ -57,42 +54,54 @@ func (p *Parser) parseCallExpression() ast.Expression {
 	return &ast.CallExpression{Function: name, Argument: arg, Line: line}
 }
 
-func (p *Parser) parseListAccess() ast.Expression {
-	name := p.curToken.Literal
+func (p *Parser) parseColonInfix(left ast.Expression) ast.Expression {
 	line := p.curToken.Line
 	p.nextToken()
-	p.nextToken()
 
-	if p.curToken.Type == lexer.LPAREN {
-		expr := p.parseGroupedExpression()
-		if listLit, ok := expr.(*ast.ListLiteral); ok && len(listLit.Elements) == 2 {
-			return &ast.ListSliceExpression{
-				Name:  name,
-				Start: listLit.Elements[0],
-				End:   listLit.Elements[1],
-				Line:  line,
-			}
-		}
-		if listLit, ok := expr.(*ast.ListLiteral); ok && len(listLit.Elements) == 1 {
-			return &ast.ListIndexExpression{
-				Name:  name,
-				Index: listLit.Elements[0],
-				Line:  line,
-			}
+	if p.curToken.Type == lexer.NUMBER {
+		lit := p.parseNumberLiteral()
+		ident, ok := left.(*ast.Identifier)
+		if !ok {
+			p.error(fmt.Sprintf("cannot index non-identifier at line %d", line))
+			return nil
 		}
 		return &ast.ListIndexExpression{
-			Name:  name,
-			Index: expr,
+			Name:  ident.Value,
+			Index: lit,
 			Line:  line,
 		}
 	}
 
-	index := p.parseExpression(LOWEST)
-	return &ast.ListIndexExpression{
-		Name:  name,
-		Index: index,
-		Line:  line,
+	if p.curToken.Type == lexer.IDENTIFIER {
+		methodName := p.curToken.Literal
+		p.nextToken()
+		args := []ast.Expression{}
+		if p.curToken.Type == lexer.LPAREN {
+			p.nextToken()
+			if p.curToken.Type != lexer.RPAREN {
+				args = append(args, p.parseExpression(LOWEST))
+				for p.peekToken.Type == lexer.COMMA {
+					p.nextToken()
+					p.nextToken()
+					args = append(args, p.parseExpression(LOWEST))
+				}
+			}
+			if p.curToken.Type == lexer.RPAREN {
+				p.nextToken()
+			} else if p.peekToken.Type == lexer.RPAREN {
+				p.nextToken()
+			}
+		}
+		return &ast.MethodCallExpression{
+			Object: left,
+			Method: methodName,
+			Args:   args,
+			Line:   line,
+		}
 	}
+
+	p.error(fmt.Sprintf("unexpected token '%s' after ':' at line %d", p.curToken.Literal, line))
+	return nil
 }
 
 func (p *Parser) parseNumberLiteral() ast.Expression {

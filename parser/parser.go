@@ -29,6 +29,7 @@ const (
 	SUM         // + -
 	PRODUCT     // * /
 	CALL        // ()
+	COLON       // :
 	PREFIX
 )
 
@@ -63,6 +64,7 @@ func NewParser(l *lexer.Lexer) *Parser {
 	p.registerInfix(lexer.GE, p.parseInfixExpression)
 	p.registerInfix(lexer.OR, p.parseInfixExpression)
 	p.registerInfix(lexer.AND, p.parseInfixExpression)
+	p.registerInfix(lexer.COLON, p.parseColonInfix)
 
 	p.nextToken()
 	p.nextToken()
@@ -119,6 +121,8 @@ func (p *Parser) peekPrecedence() int {
 			return SUM
 		case lexer.ASTERISK, lexer.SLASH:
 			return PRODUCT
+		case lexer.COLON:
+			return COLON
 		default:
 			return LOWEST
 		}
@@ -140,6 +144,8 @@ func (p *Parser) curPrecedence() int {
 		return SUM
 	case lexer.ASTERISK, lexer.SLASH:
 		return PRODUCT
+	case lexer.COLON:
+		return COLON
 	default:
 		return LOWEST
 	}

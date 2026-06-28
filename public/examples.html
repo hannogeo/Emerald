@@ -137,10 +137,13 @@
 <span class="kw">var</span>.<span class="fn">items</span> (<span class="num">10</span>, <span class="num">20</span>, <span class="num">30</span>, <span class="num">40</span>)
 
 <span class="cm">! access (1-based)</span>
-<span class="kw">print</span> <span class="fn">items</span>:<span class="num">1</span>       <span class="cm">! 10</span>
+<span class="kw">print</span> <span class="fn">items</span>:<span class="num">1</span>         <span class="cm">! 10</span>
 
-<span class="cm">! slice</span>
-<span class="kw">print</span> <span class="fn">items</span>:(<span class="num">2</span>, <span class="num">4</span>)  <span class="cm">! (20, 30, 40)</span>
+<span class="cm">! slice (start, length)</span>
+<span class="kw">print</span> <span class="fn">items</span>:<span class="fn">slice</span>(<span class="num">2</span>, <span class="num">3</span>)  <span class="cm">! (20, 30, 40)</span>
+
+<span class="cm">! length</span>
+<span class="kw">print</span> <span class="fn">items</span>:<span class="fn">len</span>          <span class="cm">! 4</span>
 
 <span class="cm">! add</span>
 <span class="kw">add</span> <span class="fn">items</span> <span class="num">50</span>
@@ -202,15 +205,29 @@
     </div>
 
     <div class="example">
-      <h3>String Operations</h3>
-      <p class="desc">Concatenation, substring removal, and repetition.</p>
-      <pre><span class="kw">var</span>.<span class="fn">s</span> <span class="str">"Hello"</span>
-<span class="kw">var</span>.<span class="fn">t</span> <span class="str">" World"</span>
-<span class="kw">print</span> <span class="fn">s</span> <span class="op">+</span> <span class="fn">t</span>       <span class="cm">! Hello World</span>
+      <h3>String Methods</h3>
+      <p class="desc">Use the <code>:</code> operator to slice, transform, and inspect strings.</p>
+      <pre><span class="kw">var</span>.<span class="fn">text</span> <span class="str">"Hello, World!"</span>
 
-<span class="kw">print</span> <span class="fn">s</span> <span class="op">-</span> <span class="str">"l"</span>     <span class="cm">! Heo  (removes first match)</span>
-<span class="kw">print</span> <span class="fn">s</span> <span class="op">*</span> <span class="num">3</span>       <span class="cm">! HelloHelloHello</span></pre>
-    </div>
+<span class="cm">! slice (start, length)</span>
+<span class="kw">print</span> <span class="fn">text</span>:<span class="fn">slice</span>(<span class="num">1</span>, <span class="num">5</span>)          <span class="cm">! Hello</span>
+
+<span class="cm">! case conversion</span>
+<span class="kw">print</span> <span class="fn">text</span>:<span class="fn">upper</span>                  <span class="cm">! HELLO, WORLD!</span>
+<span class="kw">print</span> <span class="fn">text</span>:<span class="fn">lower</span>                  <span class="cm">! hello, world!</span>
+
+<span class="cm">! split / join</span>
+<span class="kw">var</span>.<span class="fn">parts</span> <span class="fn">text</span>:<span class="fn">split</span>(<span class="str">", "</span>)
+<span class="kw">print</span> <span class="fn">parts</span>:<span class="fn">join</span>(<span class="str">" - "</span>)          <span class="cm">! Hello - World!</span>
+
+<span class="cm">! replace and check</span>
+<span class="kw">print</span> <span class="fn">text</span>:<span class="fn">replace</span>(<span class="str">"World"</span>, <span class="str">"Emerald"</span>)
+<span class="kw">print</span> <span class="fn">text</span>:<span class="fn">contains</span>(<span class="str">"World"</span>)      <span class="cm">! True</span>
+
+<span class="cm">! length and chaining</span>
+<span class="kw">print</span> <span class="fn">text</span>:<span class="fn">len</span>                      <span class="cm">! 13</span>
+<span class="kw">print</span> <span class="fn">text</span>:<span class="fn">lower</span>:<span class="fn">replace</span>(<span class="str">"hello"</span>, <span class="str">"hi"</span>):<span class="fn">upper</span></pre>
+      </div>
 
     <div class="example">
       <h3>Built-in Functions</h3>

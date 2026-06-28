@@ -39,8 +39,8 @@ func (i *Interpreter) evalExpression(expr ast.Expression) (interface{}, error) {
 		return i.evalPrefixExpression(e)
 	case *ast.TypeLiteral:
 		return &typeCheck{TypeName: e.TypeName}, nil
-	case *ast.ListSliceExpression:
-		return i.evalListSliceExpression(e)
+	case *ast.MethodCallExpression:
+		return i.evalMethodCallExpression(e)
 	}
 	return nil, fmt.Errorf("unknown expression type")
 }
@@ -168,35 +168,172 @@ func (i *Interpreter) evalListIndexExpression(e *ast.ListIndexExpression) (inter
 	return list[int(idx)-1], nil
 }
 
-func (i *Interpreter) evalListSliceExpression(e *ast.ListSliceExpression) (interface{}, error) {
-	val, ok := i.env[e.Name]
-	if !ok {
-		return nil, fmt.Errorf("undefined variable '%s' at line %d", e.Name, e.Line)
-	}
-	list, ok := val.([]interface{})
-	if !ok {
-		return nil, fmt.Errorf("'%s' is not a list at line %d", e.Name, e.Line)
-	}
-	startVal, err := i.evalExpression(e.Start)
+func (i *Interpreter) evalMethodCallExpression(e *ast.MethodCallExpression) (interface{}, error) {
+	obj, err := i.evalExpression(e.Object)
 	if err != nil {
 		return nil, err
 	}
-	endVal, err := i.evalExpression(e.End)
-	if err != nil {
-		return nil, err
+
+	args := make([]interface{}, len(e.Args))
+	for j, arg := range e.Args {
+		args[j], err = i.evalExpression(arg)
+		if err != nil {
+			return nil, err
+		}
 	}
-	start, ok := startVal.(float64)
-	if !ok {
-		return nil, fmt.Errorf("slice start must be a number at line %d", e.Line)
+
+	switch e.Method {
+	case "slice":
+		if len(args) != 2 {
+			return nil, fmt.Errorf("slice requires 2 arguments (start, length) at line %d", e.Line)
+		}
+		start, ok := args[0].(float64)
+		if !ok {
+			return nil, fmt.Errorf("slice start must be a number at line %d", e.Line)
+		}
+		length, ok := args[1].(float64)
+		if !ok {
+			return nil, fmt.Errorf("slice length must be a number at line %d", e.Line)
+		}
+		switch v := obj.(type) {
+		case string:
+			runes := []rune(v)
+			s := int(start) - 1
+			l := int(length)
+			if s < 0 {
+				s = 0
+			}
+			if s > len(runes) {
+				s = len(runes)
+			}
+			if s+l > len(runes) {
+				l = len(runes) - s
+			}
+			return string(runes[s : s+l]), nil
+		case []interface{}:
+			s := int(start) - 1
+			l := int(length)
+			if s < 0 {
+				s = 0
+			}
+			if s > len(v) {
+				s = len(v)
+			}
+			if s+l > len(v) {
+				l = len(v) - s
+			}
+			return v[s : s+l], nil
+		default:
+			return nil, fmt.Errorf("slice requires a string or list at line %d", e.Line)
+		}
+
+	case "upper":
+		str, ok := obj.(string)
+		if !ok {
+			return nil, fmt.Errorf("upper requires a string at line %d", e.Line)
+		}
+		return strings.ToUpper(str), nil
+
+	case "lower":
+		str, ok := obj.(string)
+		if !ok {
+			return nil, fmt.Errorf("lower requires a string at line %d", e.Line)
+		}
+		return strings.ToLower(str), nil
+
+	case "trim":
+		str, ok := obj.(string)
+		if !ok {
+			return nil, fmt.Errorf("trim requires a string at line %d", e.Line)
+		}
+		return strings.TrimSpace(str), nil
+
+	case "split":
+		str, ok := obj.(string)
+		if !ok {
+			return nil, fmt.Errorf("split requires a string at line %d", e.Line)
+		}
+		if len(args) != 1 {
+			return nil, fmt.Errorf("split requires 1 argument (delimiter) at line %d", e.Line)
+		}
+		delim, ok := args[0].(string)
+		if !ok {
+			return nil, fmt.Errorf("split delimiter must be a string at line %d", e.Line)
+		}
+		parts := strings.Split(str, delim)
+		result := make([]interface{}, len(parts))
+		for i, p := range parts {
+			result[i] = p
+		}
+		return result, nil
+
+	case "join":
+		list, ok := obj.([]interface{})
+		if !ok {
+			return nil, fmt.Errorf("join requires a list at line %d", e.Line)
+		}
+		if len(args) != 1 {
+			return nil, fmt.Errorf("join requires 1 argument (delimiter) at line %d", e.Line)
+		}
+		delim, ok := args[0].(string)
+		if !ok {
+			return nil, fmt.Errorf("join delimiter must be a string at line %d", e.Line)
+		}
+		parts := make([]string, len(list))
+		for i, v := range list {
+			s, ok := v.(string)
+			if !ok {
+				return nil, fmt.Errorf("join requires a list of strings at line %d", e.Line)
+			}
+			parts[i] = s
+		}
+		return strings.Join(parts, delim), nil
+
+	case "replace":
+		str, ok := obj.(string)
+		if !ok {
+			return nil, fmt.Errorf("replace requires a string at line %d", e.Line)
+		}
+		if len(args) != 2 {
+			return nil, fmt.Errorf("replace requires 2 arguments (old, new) at line %d", e.Line)
+		}
+		old, ok := args[0].(string)
+		if !ok {
+			return nil, fmt.Errorf("replace old must be a string at line %d", e.Line)
+		}
+		new, ok := args[1].(string)
+		if !ok {
+			return nil, fmt.Errorf("replace new must be a string at line %d", e.Line)
+		}
+		return strings.Replace(str, old, new, -1), nil
+
+	case "contains":
+		str, ok := obj.(string)
+		if !ok {
+			return nil, fmt.Errorf("contains requires a string at line %d", e.Line)
+		}
+		if len(args) != 1 {
+			return nil, fmt.Errorf("contains requires 1 argument (substring) at line %d", e.Line)
+		}
+		sub, ok := args[0].(string)
+		if !ok {
+			return nil, fmt.Errorf("contains substring must be a string at line %d", e.Line)
+		}
+		return strings.Contains(str, sub), nil
+
+	case "len":
+		switch v := obj.(type) {
+		case string:
+			return float64(len([]rune(v))), nil
+		case []interface{}:
+			return float64(len(v)), nil
+		default:
+			return nil, fmt.Errorf("len requires a string or list at line %d", e.Line)
+		}
+
+	default:
+		return nil, fmt.Errorf("unknown method '%s' at line %d", e.Method, e.Line)
 	}
-	end, ok := endVal.(float64)
-	if !ok {
-		return nil, fmt.Errorf("slice end must be a number at line %d", e.Line)
-	}
-	if start < 1 || int(end) > len(list) || start > end {
-		return nil, fmt.Errorf("slice out of range at line %d", e.Line)
-	}
-	return list[int(start)-1 : int(end)], nil
 }
 
 func (i *Interpreter) evalInterpolatedString(e *ast.InterpolatedStringLiteral) (interface{}, error) {

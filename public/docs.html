@@ -46,9 +46,10 @@
     <a href="#list-iteration" class="h3-link" data-target="list-iteration">8.3 List Iteration</a>
     <a href="#functions" class="h2-link" data-target="functions">9. Functions</a>
     <a href="#lists" class="h2-link" data-target="lists">10. Lists</a>
-    <a href="#input" class="h2-link" data-target="input">11. Input</a>
-    <a href="#builtins" class="h2-link" data-target="builtins">12. Built-in Functions</a>
-    <a href="#cli" class="h2-link" data-target="cli">13. CLI Usage</a>
+    <a href="#strings" class="h2-link" data-target="strings">11. String Methods</a>
+    <a href="#input" class="h2-link" data-target="input">12. Input</a>
+    <a href="#builtins" class="h2-link" data-target="builtins">13. Built-in Functions</a>
+    <a href="#cli" class="h2-link" data-target="cli">14. CLI Usage</a>
   </nav>
 
   <main class="docs-page">
@@ -233,8 +234,11 @@
 <span class="kw">print</span> <span class="fn">items</span>:<span class="num">1</span>  <span class="cm">! 10</span>
 <span class="kw">print</span> <span class="fn">items</span>:<span class="num">3</span>  <span class="cm">! 30</span>
 
-<span class="cm">! Slice (items 2 and 3)</span>
-<span class="kw">print</span> <span class="fn">items</span>:(<span class="num">2</span>, <span class="num">3</span>)  <span class="cm">! (20, 30)</span>
+<span class="cm">! Slice (start, length)</span>
+<span class="kw">print</span> <span class="fn">items</span>:<span class="fn">slice</span>(<span class="num">2</span>, <span class="num">2</span>)  <span class="cm">! (20, 30)</span>
+
+<span class="cm">! List length</span>
+<span class="kw">print</span> <span class="fn">items</span>:<span class="fn">len</span>  <span class="cm">! 3</span>
 
 <span class="cm">! Add an element</span>
 <span class="kw">add</span> <span class="fn">items</span> <span class="num">40</span>
@@ -242,12 +246,44 @@
 <span class="cm">! Empty list</span>
 <span class="kw">var</span>.<span class="fn">empty</span> ()</pre>
 
-    <h2 id="input">11. Input</h2>
+    <h2 id="strings">11. String Methods</h2>
+    <p>Strings support method calls via the <code>:</code> operator.</p>
+
+    <pre><span class="kw">var</span>.<span class="fn">text</span> <span class="str">"Hello, World!"</span>
+
+<span class="cm">! Slice (start, length)</span>
+<span class="kw">print</span> <span class="fn">text</span>:<span class="fn">slice</span>(<span class="num">1</span>, <span class="num">5</span>)  <span class="cm">! Hello</span>
+
+<span class="cm">! Case conversion</span>
+<span class="kw">print</span> <span class="fn">text</span>:<span class="fn">upper</span>            <span class="cm">! HELLO, WORLD!</span>
+<span class="kw">print</span> <span class="fn">text</span>:<span class="fn">lower</span>            <span class="cm">! hello, world!</span>
+
+<span class="cm">! Trim whitespace</span>
+<span class="kw">print</span> <span class="str">"  hi  "</span>:<span class="fn">trim</span>          <span class="cm">! hi</span>
+
+<span class="cm">! Split into list / Join list into string</span>
+<span class="kw">var</span>.<span class="fn">parts</span> <span class="fn">text</span>:<span class="fn">split</span>(<span class="str">", "</span>)
+<span class="kw">print</span> <span class="fn">parts</span>                    <span class="cm">! Hello, World!</span>
+<span class="kw">print</span> <span class="fn">parts</span>:<span class="fn">join</span>(<span class="str">" - "</span>)      <span class="cm">! Hello - World!</span>
+
+<span class="cm">! Replace substring</span>
+<span class="kw">print</span> <span class="fn">text</span>:<span class="fn">replace</span>(<span class="str">"World"</span>, <span class="str">"Emerald"</span>)
+
+<span class="cm">! Check contains</span>
+<span class="kw">print</span> <span class="fn">text</span>:<span class="fn">contains</span>(<span class="str">"World"</span>)  <span class="cm">! True</span>
+
+<span class="cm">! Length</span>
+<span class="kw">print</span> <span class="fn">text</span>:<span class="fn">len</span>                <span class="cm">! 13</span>
+
+<span class="cm">! Chaining</span>
+<span class="kw">print</span> <span class="fn">text</span>:<span class="fn">lower</span>:<span class="fn">replace</span>(<span class="str">"hello"</span>, <span class="str">"hi"</span>):<span class="fn">upper</span>  <span class="cm">! HI, WORLD!</span></pre>
+
+    <h2 id="input">12. Input</h2>
     <p>Read a line from stdin with an optional prompt. Returns a string.</p>
     <pre><span class="kw">var</span>.<span class="fn">name</span> <span class="kw">input</span> <span class="str">"Enter your name: "</span>
 <span class="kw">print</span> <span class="str">$"Hello, {</span><span class="fn">name</span><span class="str">}!"</span></pre>
 
-    <h2 id="builtins">12. Built-in Functions</h2>
+    <h2 id="builtins">13. Built-in Functions</h2>
     <table>
       <tr><th>Function</th><th>Description</th><th>Example</th></tr>
       <tr>
@@ -267,7 +303,7 @@
       </tr>
     </table>
 
-    <h2 id="cli">13. CLI Usage</h2>
+    <h2 id="cli">14. CLI Usage</h2>
     <pre>emerald &lt;file.emld&gt;     Run a script
 emerald update          Self-update to the latest version
 emerald version         Print version number</pre>

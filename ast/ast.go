@@ -227,16 +227,26 @@ func (lie *ListIndexExpression) String() string {
 	return fmt.Sprintf("%s:%s", lie.Name, lie.Index.String())
 }
 
-type ListSliceExpression struct {
-	Name  string
-	Start Expression
-	End   Expression
-	Line  int
+type MethodCallExpression struct {
+	Object Expression
+	Method string
+	Args   []Expression
+	Line   int
 }
 
-func (lse *ListSliceExpression) expressionNode() {}
-func (lse *ListSliceExpression) String() string {
-	return fmt.Sprintf("%s:(%s, %s)", lse.Name, lse.Start.String(), lse.End.String())
+func (mce *MethodCallExpression) expressionNode() {}
+func (mce *MethodCallExpression) String() string {
+	if len(mce.Args) == 0 {
+		return fmt.Sprintf("%s:%s", mce.Object.String(), mce.Method)
+	}
+	out := fmt.Sprintf("%s:%s(", mce.Object.String(), mce.Method)
+	for i, arg := range mce.Args {
+		if i > 0 {
+			out += ", "
+		}
+		out += arg.String()
+	}
+	return out + ")"
 }
 
 type ForStatement struct {
