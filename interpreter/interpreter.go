@@ -45,6 +45,10 @@ func (i *Interpreter) evalStatement(stmt ast.Statement) error {
 		return i.evalForStatement(s)
 	case *ast.WhileStatement:
 		return i.evalWhileStatement(s)
+	case *ast.BreakStatement:
+		return &ControlSignal{Signal: "break"}
+	case *ast.ContinueStatement:
+		return &ControlSignal{Signal: "continue"}
 	case *ast.BlockStatement:
 		return i.evalBlockStatement(s)
 	}

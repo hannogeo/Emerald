@@ -87,6 +87,12 @@ func (l *Lexer) readIdentifierOrKeyword() Token {
 	case "bool":
 		tok.Type = BOOL
 		tok.Literal = word
+	case "break":
+		tok.Type = BREAK
+		tok.Literal = word
+	case "continue":
+		tok.Type = CONTINUE
+		tok.Literal = word
 	default:
 		tok.Type = IDENTIFIER
 		tok.Literal = word

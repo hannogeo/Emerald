@@ -35,7 +35,7 @@
     },
     "operators": {
       "name": "keyword.operator.emerald",
-      "match": "\\+=|-=|\\*=|/=|:|=|<=|>=|<|>"
+      "match": "\\+=|-=|\\*=|/=|\\.(?=[a-zA-Z_])|:|=|<=|>=|<|>"
     },
     "keywords": {
       "patterns": [
@@ -102,6 +102,14 @@
         {
           "name": "keyword.control.while.emerald",
           "match": "\\bwhile\\b"
+        },
+        {
+          "name": "keyword.control.break.emerald",
+          "match": "\\bbreak\\b"
+        },
+        {
+          "name": "keyword.control.continue.emerald",
+          "match": "\\bcontinue\\b"
         },
         {
           "name": "support.type.emerald",

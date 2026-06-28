@@ -116,20 +116,6 @@
   border-color: var(--text2);
 }
 
-.toc-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,.5);
-  z-index: 299;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity .2s;
-}
-.toc-overlay.open {
-  opacity: 1;
-  pointer-events: auto;
-}
-
 .toc {
   position: fixed;
   top: 5rem;
@@ -139,13 +125,14 @@
   max-height: calc(100vh - 7rem);
   background: var(--bg2);
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: 8px;
   padding: 1.5rem 1.5rem;
   overflow-y: auto;
-  transform: translateX(-110%);
+  transform-origin: top left;
+  transform: scale(0);
   opacity: 0;
   pointer-events: none;
-  transition: transform .25s ease, opacity .2s ease;
+  transition: transform .2s cubic-bezier(.22,1,.36,1), opacity .15s ease;
   flex-direction: column;
   gap: .6rem;
   box-shadow: 0 8px 32px rgba(0,0,0,.4);
@@ -155,7 +142,7 @@
   display: none;
 }
 .toc.open {
-  transform: translateX(0);
+  transform: scale(1);
   opacity: 1;
   pointer-events: auto;
 }
@@ -190,6 +177,11 @@
   border-color: var(--accent-dim);
   background: var(--accent-dim);
   color: var(--accent);
+}
+.toc a.active {
+  color: var(--accent) !important;
+  border-color: var(--accent) !important;
+  background: var(--accent-dim) !important;
 }
 .toc a.h3-link {
   margin-left: .75rem;

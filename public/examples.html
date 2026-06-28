@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Emerald - Examples</title>
+  <link rel="icon" type="image/svg+xml" href="emerald.svg">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="docs.css">
+  <style>
+    .example { margin-bottom: 3rem; }
+    .example h3 { margin-bottom: .25rem; }
+    .example .desc { text-align: left; max-width: none; margin: 0 0 .75rem; font-size: .9rem; }
+    .example pre { margin-bottom: 0; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo"><a href="index.html"><img src="emerald.svg" alt="" class="logo-icon"> emerald</a></div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="docs.html">Docs</a>
+      <a href="examples.html">Examples</a>
+      <a href="changelog.html">Changelog</a>
+      <a href="https://github.com/hannogeo/Emerald" target="_blank" rel="noopener noreferrer">GitHub</a>
+    </nav>
+  </header>
+
+  <main class="docs-page">
+    <a href="index.html" class="back-link">&larr; Back to Home</a>
+    <h1>Emerald Examples</h1>
+    <p>A collection of Emerald programs to get you started.</p>
+
+    <div class="example">
+      <h3>Hello World</h3>
+      <p class="desc">The classic starter program.</p>
+      <pre><span class="kw">print</span> <span class="str">"Hello, World!"</span></pre>
+    </div>
+
+    <div class="example">
+      <h3>Variables &amp; Reassignment</h3>
+      <p class="desc">Declare, reassign, and use compound assignment.</p>
+      <pre><span class="kw">var</span>.<span class="fn">x</span> <span class="num">10</span>
+<span class="kw">var</span>.<span class="fn">name</span> <span class="str">"Emerald"</span>
+
+<span class="fn">.x</span> <span class="op">+=</span> <span class="num">5</span>
+<span class="fn">.name</span> <span class="str">"Ruby"</span>
+
+<span class="kw">print</span> <span class="fn">x</span>     <span class="cm">! 15</span>
+<span class="kw">print</span> <span class="fn">name</span>  <span class="cm">! Ruby</span></pre>
+    </div>
+
+    <div class="example">
+      <h3>If / Elif / Else</h3>
+      <p class="desc">Branching with <code>not</code>, <code>and</code>, and <code>or</code>.</p>
+      <pre><span class="kw">var</span>.<span class="fn">score</span> <span class="num">85</span>
+
+<span class="kw">if</span> <span class="fn">score</span> <span class="op">>=</span> <span class="num">90</span> {
+  <span class="kw">print</span> <span class="str">"A"</span>
+}
+<span class="kw">elif</span> <span class="fn">score</span> <span class="op">>=</span> <span class="num">80</span> {
+  <span class="kw">print</span> <span class="str">"B"</span>
+}
+<span class="kw">else</span> {
+  <span class="kw">print</span> <span class="str">"C"</span>
+}
+
+<span class="cm">! with not, and, or</span>
+<span class="kw">if</span> <span class="fn">score</span> <span class="op">></span> <span class="num">0</span> <span class="kw">and</span> <span class="fn">score</span> <span class="op">&lt;</span> <span class="num">100</span> {
+  <span class="kw">print</span> <span class="str">"valid"</span>
+}
+<span class="kw">if</span> <span class="fn">score</span> <span class="op">=</span> <span class="kw">not</span> <span class="kw">num</span> {
+  <span class="kw">print</span> <span class="str">"not a number"</span>
+}</pre>
+    </div>
+
+    <div class="example">
+      <h3>While Loop</h3>
+      <p class="desc">Count down with a <code>while</code> loop and compound assignment.</p>
+      <pre><span class="kw">var</span>.<span class="fn">x</span> <span class="num">5</span>
+<span class="kw">while</span> <span class="fn">x</span> <span class="op">></span> <span class="num">0</span> {
+  <span class="kw">print</span> <span class="fn">x</span>
+  <span class="fn">.x</span> <span class="op">-=</span> <span class="num">1</span>
+}
+<span class="cm">! prints 5 4 3 2 1</span></pre>
+    </div>
+
+    <div class="example">
+      <h3>For Loop with Range</h3>
+      <p class="desc">Iterate over a numeric range.</p>
+      <pre><span class="kw">for</span> <span class="fn">i</span> <span class="kw">in</span> <span class="kw">range</span>:<span class="num">5</span> {
+  <span class="kw">print</span> <span class="fn">i</span>
+}
+<span class="cm">! prints 1 2 3 4 5</span>
+
+<span class="kw">for</span> <span class="fn">i</span> <span class="kw">in</span> <span class="kw">range</span>:(<span class="num">0</span>, <span class="num">3</span>) {
+  <span class="kw">print</span> <span class="fn">i</span>
+}
+<span class="cm">! prints 0 1 2 3</span></pre>
+    </div>
+
+    <div class="example">
+      <h3>Break &amp; Continue</h3>
+      <p class="desc">Control loop execution with <code>break</code> and <code>continue</code>.</p>
+      <pre><span class="cm">! break: stop at 5</span>
+<span class="kw">var</span>.<span class="fn">x</span> <span class="num">1</span>
+<span class="kw">while</span> <span class="fn">x</span> <span class="op">&lt;</span> <span class="num">10</span> {
+  <span class="kw">if</span> <span class="fn">x</span> <span class="op">=</span> <span class="num">5</span> { <span class="kw">break</span> }
+  <span class="kw">print</span> <span class="fn">x</span>
+  <span class="fn">.x</span> <span class="op">+=</span> <span class="num">1</span>
+}
+<span class="cm">! prints 1 2 3 4</span>
+
+<span class="cm">! continue: skip 3</span>
+<span class="kw">var</span>.<span class="fn">y</span> <span class="num">0</span>
+<span class="kw">while</span> <span class="fn">y</span> <span class="op">&lt;</span> <span class="num">5</span> {
+  <span class="fn">.y</span> <span class="op">+=</span> <span class="num">1</span>
+  <span class="kw">if</span> <span class="fn">y</span> <span class="op">=</span> <span class="num">3</span> { <span class="kw">continue</span> }
+  <span class="kw">print</span> <span class="fn">y</span>
+}
+<span class="cm">! prints 1 2 4 5</span></pre>
+    </div>
+
+    <div class="example">
+      <h3>List Iteration</h3>
+      <p class="desc">Loop over a list with <code>for...in</code>.</p>
+      <pre><span class="kw">var</span>.<span class="fn">fruits</span> (<span class="str">"apple"</span>, <span class="str">"banana"</span>, <span class="str">"cherry"</span>)
+<span class="kw">for</span> <span class="fn">fruit</span> <span class="kw">in</span> <span class="fn">fruits</span> {
+  <span class="kw">print</span> <span class="fn">fruit</span>
+}</pre>
+    </div>
+
+    <div class="example">
+      <h3>Lists</h3>
+      <p class="desc">Create, access, slice, and modify lists.</p>
+      <pre><span class="cm">! create</span>
+<span class="kw">var</span>.<span class="fn">items</span> (<span class="num">10</span>, <span class="num">20</span>, <span class="num">30</span>, <span class="num">40</span>)
+
+<span class="cm">! access (1-based)</span>
+<span class="kw">print</span> <span class="fn">items</span>:<span class="num">1</span>       <span class="cm">! 10</span>
+
+<span class="cm">! slice</span>
+<span class="kw">print</span> <span class="fn">items</span>:(<span class="num">2</span>, <span class="num">4</span>)  <span class="cm">! (20, 30, 40)</span>
+
+<span class="cm">! add</span>
+<span class="kw">add</span> <span class="fn">items</span> <span class="num">50</span>
+
+<span class="cm">! iterate</span>
+<span class="kw">for</span> <span class="fn">i</span> <span class="kw">in</span> <span class="fn">items</span> {
+  <span class="kw">print</span> <span class="fn">i</span>
+}</pre>
+    </div>
+
+    <div class="example">
+      <h3>Functions</h3>
+      <p class="desc">Define and call functions. All variables are global.</p>
+      <pre><span class="kw">fn</span>.<span class="fn">greet</span> {
+  <span class="kw">print</span> <span class="str">"Hello!"</span>
+}
+
+<span class="kw">fn</span>.<span class="fn">sayName</span> {
+  <span class="kw">print</span> <span class="fn">name</span>
+}
+
+<span class="kw">var</span>.<span class="fn">name</span> <span class="str">"Bob"</span>
+<span class="kw">run</span> <span class="fn">greet</span>   <span class="cm">! Hello!</span>
+<span class="kw">run</span> <span class="fn">sayName</span> <span class="cm">! Bob</span></pre>
+    </div>
+
+    <div class="example">
+      <h3>Input</h3>
+      <p class="desc">Read a line from stdin with a prompt.</p>
+      <pre><span class="kw">var</span>.<span class="fn">name</span> <span class="kw">input</span> <span class="str">"Enter your name: "</span>
+<span class="kw">print</span> <span class="str">$"Hello, {</span><span class="fn">name</span><span class="str">}!"</span></pre>
+    </div>
+
+    <div class="example">
+      <h3>Type Checking</h3>
+      <p class="desc">Use type keywords with <code>=</code> to check variable types.</p>
+      <pre><span class="kw">var</span>.<span class="fn">a</span> <span class="num">42</span>
+<span class="kw">var</span>.<span class="fn">b</span> <span class="str">"hello"</span>
+<span class="kw">var</span>.<span class="fn">c</span> <span class="kw">True</span>
+
+<span class="kw">if</span> <span class="fn">a</span> <span class="op">=</span> <span class="kw">num</span>  { <span class="kw">print</span> <span class="str">"a is a number"</span> }
+<span class="kw">if</span> <span class="fn">b</span> <span class="op">=</span> <span class="kw">str</span>  { <span class="kw">print</span> <span class="str">"b is a string"</span> }
+<span class="kw">if</span> <span class="fn">c</span> <span class="op">=</span> <span class="kw">bool</span> { <span class="kw">print</span> <span class="str">"c is a bool"</span> }
+<span class="kw">if</span> <span class="fn">a</span> <span class="op">=</span> <span class="kw">not</span> <span class="kw">str</span> { <span class="kw">print</span> <span class="str">"a is not a string"</span> }</pre>
+    </div>
+
+    <div class="example">
+      <h3>Membership with <code>or</code></h3>
+      <p class="desc">Check if a value matches any of several options.</p>
+      <pre><span class="kw">var</span>.<span class="fn">x</span> <span class="num">3</span>
+<span class="kw">if</span> <span class="fn">x</span> <span class="op">=</span> <span class="num">1</span> <span class="kw">or</span> <span class="num">2</span> <span class="kw">or</span> <span class="num">3</span> {
+  <span class="kw">print</span> <span class="str">"x is 1, 2, or 3"</span>
+}
+
+<span class="cm">! combine with not</span>
+<span class="kw">if</span> <span class="fn">x</span> <span class="op">=</span> <span class="kw">not</span> <span class="num">0</span> <span class="kw">or</span> <span class="kw">not</span> <span class="num">1</span> {
+  <span class="kw">print</span> <span class="str">"x is neither 0 nor 1"</span>
+}</pre>
+    </div>
+
+    <div class="example">
+      <h3>String Operations</h3>
+      <p class="desc">Concatenation, substring removal, and repetition.</p>
+      <pre><span class="kw">var</span>.<span class="fn">s</span> <span class="str">"Hello"</span>
+<span class="kw">var</span>.<span class="fn">t</span> <span class="str">" World"</span>
+<span class="kw">print</span> <span class="fn">s</span> <span class="op">+</span> <span class="fn">t</span>       <span class="cm">! Hello World</span>
+
+<span class="kw">print</span> <span class="fn">s</span> <span class="op">-</span> <span class="str">"l"</span>     <span class="cm">! Heo  (removes first match)</span>
+<span class="kw">print</span> <span class="fn">s</span> <span class="op">*</span> <span class="num">3</span>       <span class="cm">! HelloHelloHello</span></pre>
+    </div>
+
+    <div class="example">
+      <h3>Built-in Functions</h3>
+      <p class="desc">Convert between types with <code>str()</code>, <code>num()</code>, <code>bool()</code>.</p>
+      <pre><span class="kw">var</span>.<span class="fn">n</span> <span class="fn">num</span>(<span class="str">"42"</span>)
+<span class="kw">var</span>.<span class="fn">s</span> <span class="fn">str</span>(<span class="num">123</span>)
+<span class="kw">var</span>.<span class="fn">b</span> <span class="fn">bool</span>(<span class="num">1</span>)
+
+<span class="kw">print</span> <span class="fn">n</span>             <span class="cm">! 42</span>
+<span class="kw">print</span> <span class="str">$"Hello {</span><span class="fn">s</span><span class="str">}"</span>  <span class="cm">! Hello 123</span>
+<span class="kw">print</span> <span class="fn">b</span>             <span class="cm">! True</span></pre>
+    </div>
+
+  </main>
+
+  <footer>
+    <p>Emerald - built with Go</p>
+    <p class="small"><a href="https://github.com/hannogeo/Emerald" target="_blank" rel="noopener noreferrer">GitHub</a></p>
+  </footer>
+
+  <script>
+    document.querySelectorAll('.docs-page pre').forEach(function(pre) {
+      var btn = document.createElement('button');
+      btn.className = 'copy-btn';
+      btn.textContent = 'copy';
+      btn.setAttribute('aria-label', 'Copy code block');
+      pre.appendChild(btn);
+      btn.addEventListener('click', function() {
+        var text = pre.textContent.trim();
+        if (!text) return;
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(text).then(function() {
+            btn.textContent = 'copied!';
+            btn.classList.add('copied');
+            setTimeout(function() { btn.textContent = 'copy'; btn.classList.remove('copied'); }, 2000);
+          });
+        } else {
+          var ta = document.createElement('textarea');
+          ta.value = text;
+          ta.style.position = 'fixed';
+          ta.style.opacity = '0';
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand('copy');
+          document.body.removeChild(ta);
+          btn.textContent = 'copied!';
+          btn.classList.add('copied');
+          setTimeout(function() { btn.textContent = 'copy'; btn.classList.remove('copied'); }, 2000);
+        }
+      });
+    });
+  </script>
+</body>
+</html>

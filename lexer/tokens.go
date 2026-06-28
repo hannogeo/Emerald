@@ -53,6 +53,8 @@ const (
 	NUM        TokenType = "NUM"
 	STR        TokenType = "STR"
 	BOOL       TokenType = "BOOL"
+	BREAK      TokenType = "BREAK"
+	CONTINUE   TokenType = "CONTINUE"
 )
 
 type Token struct {

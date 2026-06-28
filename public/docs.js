@@ -1,27 +1,73 @@
 var btn = document.getElementById('tocBtn');
 var toc = document.getElementById('toc');
-var overlay = document.getElementById('tocOverlay');
 var searchInput = document.getElementById('searchInput');
 var progressBar = document.getElementById('progressBar');
 var noResults = document.getElementById('noResults');
 var docPage = document.querySelector('.docs-page');
 var scrollTopBtn = document.getElementById('scrollTop');
 
-function openToc() { toc.classList.add('open'); overlay.classList.add('open'); }
-function closeToc() { toc.classList.remove('open'); overlay.classList.remove('open'); }
-btn.addEventListener('click', openToc);
-overlay.addEventListener('click', closeToc);
-toc.querySelectorAll('a').forEach(function(a) { a.addEventListener('click', closeToc); });
+var manualOpen = false;
+var hideTimer = null;
 
-/* ----- progress bar ----- */
-function updateProgress() {
+function openToc(manual) {
+  toc.classList.add('open');
+  if (manual) { manualOpen = true; if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; } }
+}
+function closeToc() {
+  toc.classList.remove('open');
+  manualOpen = false;
+}
+btn.addEventListener('click', function() { openToc(true); });
+toc.querySelectorAll('a').forEach(function(a) { a.addEventListener('click', closeToc); });
+document.addEventListener('click', function(e) {
+  if (toc.classList.contains('open') && !toc.contains(e.target) && e.target !== btn && !btn.contains(e.target)) {
+    closeToc();
+  }
+});
+
+/* ----- progress bar + TOC auto-show ----- */
+function onScroll() {
   var scrollTop = window.scrollY;
   var docHeight = document.documentElement.scrollHeight - window.innerHeight;
   var pct = docHeight > 0 ? Math.min(scrollTop / docHeight * 100, 100) : 0;
   progressBar.style.width = pct + '%';
+
+  /* auto-show TOC on scroll, hide after idle */
+  if (!manualOpen) {
+    toc.classList.add('open');
+    if (hideTimer) clearTimeout(hideTimer);
+    hideTimer = setTimeout(function() {
+      if (!manualOpen) closeToc();
+      hideTimer = null;
+    }, 2000);
+  }
+
+  /* active section */
+  updateActiveSection();
 }
-window.addEventListener('scroll', updateProgress);
-updateProgress();
+window.addEventListener('scroll', onScroll);
+
+/* ----- active TOC section ----- */
+var headings = [];
+docPage.querySelectorAll('h2[id], h3[id]').forEach(function(h) {
+  headings.push({ el: h, id: h.id });
+});
+
+function updateActiveSection() {
+  var scrollY = window.scrollY + 120;
+  var current = null;
+  for (var i = headings.length - 1; i >= 0; i--) {
+    if (headings[i].el.offsetTop <= scrollY) { current = headings[i].id; break; }
+  }
+  if (!current && headings.length > 0) current = headings[0].id;
+
+  toc.querySelectorAll('a').forEach(function(a) {
+    a.classList.toggle('active', a.getAttribute('data-target') === current);
+  });
+}
+
+/* ----- initial states ----- */
+updateActiveSection();
 
 /* ----- line numbers ----- */
 var pres = document.querySelectorAll('.docs-page pre');
@@ -130,5 +176,8 @@ document.addEventListener('keydown', function(e) {
     searchInput.value = '';
     doSearch('');
     searchInput.blur();
+  }
+  if (e.key === 't' && !e.ctrlKey && !e.metaKey && document.activeElement === document.body) {
+    if (toc.classList.contains('open')) closeToc(); else openToc(true);
   }
 });

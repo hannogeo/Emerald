@@ -267,6 +267,16 @@ func (ws *WhileStatement) String() string {
 	return fmt.Sprintf("while %s { ... }", ws.Condition.String())
 }
 
+type BreakStatement struct{}
+
+func (bs *BreakStatement) statementNode() {}
+func (bs *BreakStatement) String() string { return "break" }
+
+type ContinueStatement struct{}
+
+func (cs *ContinueStatement) statementNode() {}
+func (cs *ContinueStatement) String() string { return "continue" }
+
 type IfStatement struct {
 	Condition   Expression
 	Consequence *BlockStatement

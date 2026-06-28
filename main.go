@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"regexp"
 
 	"emerald/interpreter"
 	"emerald/lexer"
@@ -28,6 +29,39 @@ func main() {
 	}
 }
 
+func splitLines(s string) []string {
+	if s == "" {
+		return nil
+	}
+	var lines []string
+	start := 0
+	for i := 0; i < len(s); i++ {
+		if s[i] == '\n' {
+			lines = append(lines, s[start:i])
+			start = i + 1
+		}
+	}
+	lines = append(lines, s[start:])
+	return lines
+}
+
+func formatError(err error, filename string, lines []string) string {
+	msg := err.Error()
+	re := regexp.MustCompile(`(?:at )?line (\d+)`)
+	m := re.FindStringSubmatch(msg)
+	if len(m) >= 2 {
+		var lineNum int
+		fmt.Sscanf(m[1], "%d", &lineNum)
+		if lineNum > 0 && lineNum <= len(lines) {
+			msg = fmt.Sprintf("%s\n  %d | %s", msg, lineNum, lines[lineNum-1])
+		}
+	}
+	if filename != "" {
+		msg = filename + ": " + msg
+	}
+	return msg
+}
+
 func runFile(filename string) {
 	content, err := os.ReadFile(filename)
 	if err != nil {
@@ -49,7 +83,9 @@ func runFile(filename string) {
 	interp := interpreter.NewInterpreter()
 	err = interp.Eval(program)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "Runtime error:", err)
+		lines := splitLines(string(content))
+		errMsg := formatError(err, filename, lines)
+		fmt.Fprintln(os.Stderr, "Runtime error:", errMsg)
 		os.Exit(1)
 	}
 }

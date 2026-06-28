@@ -82,8 +82,18 @@ func (i *Interpreter) evalRunStatement(stmt *ast.RunStatement) error {
 	if !ok {
 		return fmt.Errorf("'%s' is not a function", stmt.Name)
 	}
-	return i.evalBlockStatement(block)
+	err := i.evalBlockStatement(block)
+	if _, ok := err.(*ControlSignal); ok {
+		return fmt.Errorf("break/continue outside loop")
+	}
+	return err
 }
+
+type ControlSignal struct {
+	Signal string
+}
+
+func (c *ControlSignal) Error() string { return "" }
 
 func (i *Interpreter) evalForStatement(stmt *ast.ForStatement) error {
 	switch iter := stmt.Iterable.(type) {
@@ -114,6 +124,14 @@ func (i *Interpreter) evalForStatement(stmt *ast.ForStatement) error {
 			i.env[stmt.Variable] = x
 			err := i.evalBlockStatement(stmt.Body)
 			if err != nil {
+				if cs, ok := err.(*ControlSignal); ok {
+					if cs.Signal == "break" {
+						break
+					}
+					if cs.Signal == "continue" {
+						continue
+					}
+				}
 				return err
 			}
 		}
@@ -130,6 +148,14 @@ func (i *Interpreter) evalForStatement(stmt *ast.ForStatement) error {
 			i.env[stmt.Variable] = item
 			err := i.evalBlockStatement(stmt.Body)
 			if err != nil {
+				if cs, ok := err.(*ControlSignal); ok {
+					if cs.Signal == "break" {
+						break
+					}
+					if cs.Signal == "continue" {
+						continue
+					}
+				}
 				return err
 			}
 		}
@@ -175,6 +201,14 @@ func (i *Interpreter) evalWhileStatement(stmt *ast.WhileStatement) error {
 		}
 		err = i.evalBlockStatement(stmt.Body)
 		if err != nil {
+			if cs, ok := err.(*ControlSignal); ok {
+				if cs.Signal == "break" {
+					break
+				}
+				if cs.Signal == "continue" {
+					continue
+				}
+			}
 			return err
 		}
 	}

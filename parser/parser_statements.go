@@ -19,6 +19,12 @@ func (p *Parser) parseStatement() ast.Statement {
 		return p.parseForStatement()
 	case lexer.WHILE:
 		return p.parseWhileStatement()
+	case lexer.BREAK:
+		p.nextToken()
+		return &ast.BreakStatement{}
+	case lexer.CONTINUE:
+		p.nextToken()
+		return &ast.ContinueStatement{}
 	case lexer.FUNC:
 		return p.parseFuncStatement()
 	case lexer.RUN:
