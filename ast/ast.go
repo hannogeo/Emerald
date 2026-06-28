@@ -250,6 +250,23 @@ func (fs *ForStatement) String() string {
 	return fmt.Sprintf("for %s in %s { ... }", fs.Variable, fs.Iterable.String())
 }
 
+type TypeLiteral struct {
+	TypeName string
+}
+
+func (tl *TypeLiteral) expressionNode() {}
+func (tl *TypeLiteral) String() string  { return tl.TypeName }
+
+type WhileStatement struct {
+	Condition Expression
+	Body      *BlockStatement
+}
+
+func (ws *WhileStatement) statementNode() {}
+func (ws *WhileStatement) String() string {
+	return fmt.Sprintf("while %s { ... }", ws.Condition.String())
+}
+
 type IfStatement struct {
 	Condition   Expression
 	Consequence *BlockStatement

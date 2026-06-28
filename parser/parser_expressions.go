@@ -193,6 +193,13 @@ func (p *Parser) parseInputExpression() ast.Expression {
 	return &ast.InputExpression{Prompt: expr}
 }
 
+func (p *Parser) parseTypeOrCall() ast.Expression {
+	if p.peekToken.Type == lexer.LPAREN {
+		return p.parseCallExpression()
+	}
+	return &ast.TypeLiteral{TypeName: p.curToken.Literal}
+}
+
 func (p *Parser) parsePrefixExpression() ast.Expression {
 	op := p.curToken.Literal
 	line := p.curToken.Line

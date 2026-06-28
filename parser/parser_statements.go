@@ -17,12 +17,16 @@ func (p *Parser) parseStatement() ast.Statement {
 		return p.parseIfStatement()
 	case lexer.FOR:
 		return p.parseForStatement()
+	case lexer.WHILE:
+		return p.parseWhileStatement()
 	case lexer.FUNC:
 		return p.parseFuncStatement()
 	case lexer.RUN:
 		return p.parseRunStatement()
 	case lexer.ADD:
 		return p.parseAddStatement()
+	case lexer.DOT:
+		return p.parseReassignStatement()
 	default:
 		if p.curToken.Type == lexer.NEWLINE {
 			return nil
@@ -84,6 +88,58 @@ func (p *Parser) parseVarStatement() *ast.VarStatement {
 		p.nextToken()
 	}
 
+	return stmt
+}
+
+func (p *Parser) parseReassignStatement() *ast.VarStatement {
+	stmt := &ast.VarStatement{}
+	p.nextToken()
+
+	if p.curToken.Type != lexer.IDENTIFIER {
+		p.error(fmt.Sprintf("expected variable name after '.' at line %d, got '%s'", p.curToken.Line, p.curToken.Literal))
+		return nil
+	}
+
+	stmt.Name = p.curToken.Literal
+	p.nextToken()
+
+	compoundOp := ""
+	switch p.curToken.Type {
+	case lexer.PLUS_EQ:
+		compoundOp = "+"
+	case lexer.MINUS_EQ:
+		compoundOp = "-"
+	case lexer.ASTERISK_EQ:
+		compoundOp = "*"
+	case lexer.SLASH_EQ:
+		compoundOp = "/"
+	}
+
+	if compoundOp != "" {
+		p.nextToken()
+		rhs := p.parseExpression(LOWEST)
+		if rhs == nil {
+			return nil
+		}
+		stmt.Value = &ast.BinaryExpression{
+			Left:     &ast.Identifier{Value: stmt.Name},
+			Operator: compoundOp,
+			Right:    rhs,
+		}
+		for p.curToken.Type != lexer.NEWLINE && p.curToken.Type != lexer.EOF {
+			p.nextToken()
+		}
+		return stmt
+	}
+
+	expr := p.parseExpression(LOWEST)
+	if expr == nil {
+		return nil
+	}
+	stmt.Value = expr
+	for p.curToken.Type != lexer.NEWLINE && p.curToken.Type != lexer.EOF {
+		p.nextToken()
+	}
 	return stmt
 }
 
@@ -238,6 +294,21 @@ func (p *Parser) parseForStatement() *ast.ForStatement {
 	} else {
 		stmt.Iterable = p.parseExpression(LOWEST)
 	}
+
+	for p.curToken.Type != lexer.LBRACE && p.curToken.Type != lexer.EOF {
+		p.nextToken()
+	}
+
+	stmt.Body = p.parseBlockStatement()
+	return stmt
+}
+
+func (p *Parser) parseWhileStatement() *ast.WhileStatement {
+	stmt := &ast.WhileStatement{}
+
+	p.nextToken()
+
+	stmt.Condition = p.parseExpression(LOWEST)
 
 	for p.curToken.Type != lexer.LBRACE && p.curToken.Type != lexer.EOF {
 		p.nextToken()

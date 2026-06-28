@@ -24,6 +24,7 @@ const (
 	LOWEST
 	EQUALS      // =
 	OR          // or
+	AND         // and
 	LESSGREATER // < > <= >=
 	SUM         // + -
 	PRODUCT     // * /
@@ -47,6 +48,9 @@ func NewParser(l *lexer.Lexer) *Parser {
 	p.registerPrefix(lexer.NULL, p.parseNullLiteral)
 	p.registerPrefix(lexer.LPAREN, p.parseGroupedExpression)
 	p.registerPrefix(lexer.NOT, p.parsePrefixExpression)
+	p.registerPrefix(lexer.NUM, p.parseTypeOrCall)
+	p.registerPrefix(lexer.STR, p.parseTypeOrCall)
+	p.registerPrefix(lexer.BOOL, p.parseTypeOrCall)
 
 	p.registerInfix(lexer.PLUS, p.parseInfixExpression)
 	p.registerInfix(lexer.MINUS, p.parseInfixExpression)
@@ -58,6 +62,7 @@ func NewParser(l *lexer.Lexer) *Parser {
 	p.registerInfix(lexer.LE, p.parseInfixExpression)
 	p.registerInfix(lexer.GE, p.parseInfixExpression)
 	p.registerInfix(lexer.OR, p.parseInfixExpression)
+	p.registerInfix(lexer.AND, p.parseInfixExpression)
 
 	p.nextToken()
 	p.nextToken()
@@ -106,6 +111,8 @@ func (p *Parser) peekPrecedence() int {
 			return EQUALS
 		case lexer.OR:
 			return OR
+		case lexer.AND:
+			return AND
 		case lexer.LT, lexer.GT, lexer.LE, lexer.GE:
 			return LESSGREATER
 		case lexer.PLUS, lexer.MINUS:
@@ -125,6 +132,8 @@ func (p *Parser) curPrecedence() int {
 		return EQUALS
 	case lexer.OR:
 		return OR
+	case lexer.AND:
+		return AND
 	case lexer.LT, lexer.GT, lexer.LE, lexer.GE:
 		return LESSGREATER
 	case lexer.PLUS, lexer.MINUS:

@@ -4,6 +4,7 @@
   "description": "Emerald language support - syntax highlighting for .emld files",
   "version": "0.1.7",
   "publisher": "emerald-lang",
+  "icon": "emerald.png",
   "repository": { "url": "https://github.com/hannogeo/Emerald" },
   "license": "MIT",
   "engines": {

@@ -156,6 +156,15 @@ func (l *Lexer) NextToken() Token {
 		tok = Token{Type: COLON, Literal: ":", Line: l.line, Col: l.col}
 		l.readChar()
 
+	case l.ch == '.':
+		if l.readPos < len(l.input) && isLetter(l.input[l.readPos]) {
+			tok = Token{Type: DOT, Literal: ".", Line: l.line, Col: l.col}
+			l.readChar()
+		} else {
+			tok = Token{Type: ILLEGAL, Literal: string(l.ch), Line: l.line, Col: l.col}
+			l.readChar()
+		}
+
 	default:
 		tok = Token{Type: ILLEGAL, Literal: string(l.ch), Line: l.line, Col: l.col}
 		l.readChar()

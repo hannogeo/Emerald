@@ -22,8 +22,16 @@
       "match": "\\bNull\\b"
     },
     "functions": {
-      "name": "support.function.emerald",
-      "match": "\\b(str|num)\\b"
+      "patterns": [
+        {
+          "name": "support.function.emerald",
+          "match": "\\b(str|num)\\("
+        },
+        {
+          "name": "support.function.emerald",
+          "match": "\\bbool\\("
+        }
+      ]
     },
     "operators": {
       "name": "keyword.operator.emerald",
@@ -86,6 +94,18 @@
         {
           "name": "keyword.operator.emerald",
           "match": "\\bor\\b"
+        },
+        {
+          "name": "keyword.operator.emerald",
+          "match": "\\band\\b"
+        },
+        {
+          "name": "keyword.control.while.emerald",
+          "match": "\\bwhile\\b"
+        },
+        {
+          "name": "support.type.emerald",
+          "match": "\\b(num|str|bool)\\b"
         }
       ]
     },

@@ -10,6 +10,14 @@ type orValue struct {
 	Values []interface{}
 }
 
+type andValue struct {
+	Values []interface{}
+}
+
+type typeCheck struct {
+	TypeName string
+}
+
 func mergeOrValues(left, right interface{}) *orValue {
 	var vals []interface{}
 	if ov, ok := left.(*orValue); ok {
@@ -23,6 +31,21 @@ func mergeOrValues(left, right interface{}) *orValue {
 		vals = append(vals, right)
 	}
 	return &orValue{Values: vals}
+}
+
+func mergeAndValues(left, right interface{}) *andValue {
+	var vals []interface{}
+	if av, ok := left.(*andValue); ok {
+		vals = append(vals, av.Values...)
+	} else {
+		vals = append(vals, left)
+	}
+	if av, ok := right.(*andValue); ok {
+		vals = append(vals, av.Values...)
+	} else {
+		vals = append(vals, right)
+	}
+	return &andValue{Values: vals}
 }
 
 func isTruthy(val interface{}) bool {

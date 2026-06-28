@@ -19,6 +19,27 @@ func binaryOperation(left interface{}, operator string, right interface{}, line 
 		if nv, ok := right.(*notValue); ok {
 			return left != nv.Value, nil
 		}
+		if av, ok := right.(*andValue); ok {
+			if len(av.Values) == 0 {
+				return false, nil
+			}
+			return matchEq(left, av.Values[0]), nil
+		}
+		if tc, ok := right.(*typeCheck); ok {
+			switch tc.TypeName {
+			case "num":
+				_, ok := left.(float64)
+				return ok, nil
+			case "str":
+				_, ok := left.(string)
+				return ok, nil
+			case "bool":
+				_, ok := left.(bool)
+				return ok, nil
+			default:
+				return false, fmt.Errorf("unknown type '%s' at line %d", tc.TypeName, line)
+			}
+		}
 		return left == right, nil
 	case "<", ">", "<=", ">=":
 		lNum, ok1 := left.(float64)
@@ -139,6 +160,10 @@ func typeName(val interface{}) string {
 		return "not"
 	case *orValue:
 		return "or"
+	case *andValue:
+		return "and"
+	case *typeCheck:
+		return "type"
 	default:
 		return "unknown"
 	}

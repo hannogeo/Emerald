@@ -40,6 +40,14 @@ func (i *Interpreter) evalIfStatement(stmt *ast.IfStatement) error {
 					break
 				}
 			}
+		case *andValue:
+			condBool = true
+			for _, val := range v.Values {
+				if !isTruthy(val) {
+					condBool = false
+					break
+				}
+			}
 		default:
 			return fmt.Errorf("condition must be a boolean, got %s", typeName(cond))
 		}
@@ -127,6 +135,48 @@ func (i *Interpreter) evalForStatement(stmt *ast.ForStatement) error {
 		}
 	default:
 		return fmt.Errorf("for-in requires a range or list")
+	}
+	return nil
+}
+
+func (i *Interpreter) evalWhileStatement(stmt *ast.WhileStatement) error {
+	for {
+		cond, err := i.evalExpression(stmt.Condition)
+		if err != nil {
+			return err
+		}
+		condBool, ok := cond.(bool)
+		if !ok {
+			switch v := cond.(type) {
+			case *notValue:
+				condBool = !isTruthy(v.Value)
+			case *orValue:
+				condBool = false
+				for _, val := range v.Values {
+					if isTruthy(val) {
+						condBool = true
+						break
+					}
+				}
+			case *andValue:
+				condBool = true
+				for _, val := range v.Values {
+					if !isTruthy(val) {
+						condBool = false
+						break
+					}
+				}
+			default:
+				return fmt.Errorf("condition must be a boolean, got %s", typeName(cond))
+			}
+		}
+		if !condBool {
+			break
+		}
+		err = i.evalBlockStatement(stmt.Body)
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }

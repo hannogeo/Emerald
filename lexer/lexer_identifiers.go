@@ -72,6 +72,21 @@ func (l *Lexer) readIdentifierOrKeyword() Token {
 	case "or":
 		tok.Type = OR
 		tok.Literal = word
+	case "and":
+		tok.Type = AND
+		tok.Literal = word
+	case "while":
+		tok.Type = WHILE
+		tok.Literal = word
+	case "num":
+		tok.Type = NUM
+		tok.Literal = word
+	case "str":
+		tok.Type = STR
+		tok.Literal = word
+	case "bool":
+		tok.Type = BOOL
+		tok.Literal = word
 	default:
 		tok.Type = IDENTIFIER
 		tok.Literal = word

@@ -37,6 +37,8 @@ func (i *Interpreter) evalExpression(expr ast.Expression) (interface{}, error) {
 		return i.evalListIndexExpression(e)
 	case *ast.PrefixExpression:
 		return i.evalPrefixExpression(e)
+	case *ast.TypeLiteral:
+		return &typeCheck{TypeName: e.TypeName}, nil
 	case *ast.ListSliceExpression:
 		return i.evalListSliceExpression(e)
 	}
@@ -66,6 +68,14 @@ func (i *Interpreter) evalBinaryExpression(e *ast.BinaryExpression) (interface{}
 			return nil, err
 		}
 		return mergeOrValues(left, right), nil
+	}
+
+	if e.Operator == "and" {
+		right, err := i.evalExpression(e.Right)
+		if err != nil {
+			return nil, err
+		}
+		return mergeAndValues(left, right), nil
 	}
 
 	right, err := i.evalExpression(e.Right)

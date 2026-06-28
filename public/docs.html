@@ -28,13 +28,15 @@
     <a href="#comments" class="h2-link" data-target="comments">2. Comments</a>
     <a href="#variables" class="h2-link" data-target="variables">3. Variables</a>
     <a href="#data-types" class="h2-link" data-target="data-types">4. Data Types</a>
-    <a href="#string-interpolation" class="h3-link" data-target="string-interpolation">4.1 String Interpolation</a>
+    <a href="#type-checking" class="h3-link" data-target="type-checking">4.1 Type Checking</a>
+    <a href="#string-interpolation" class="h3-link" data-target="string-interpolation">4.2 String Interpolation</a>
     <a href="#operators" class="h2-link" data-target="operators">5. Operators</a>
     <a href="#print" class="h2-link" data-target="print">6. Print</a>
     <a href="#conditionals" class="h2-link" data-target="conditionals">7. Conditionals</a>
     <a href="#loops" class="h2-link" data-target="loops">8. Loops</a>
-    <a href="#numeric-range" class="h3-link" data-target="numeric-range">8.1 Numeric Range</a>
-    <a href="#list-iteration" class="h3-link" data-target="list-iteration">8.2 List Iteration</a>
+    <a href="#while-loops" class="h3-link" data-target="while-loops">8.1 While Loops</a>
+    <a href="#numeric-range" class="h3-link" data-target="numeric-range">8.2 Numeric Range</a>
+    <a href="#list-iteration" class="h3-link" data-target="list-iteration">8.3 List Iteration</a>
     <a href="#functions" class="h2-link" data-target="functions">9. Functions</a>
     <a href="#lists" class="h2-link" data-target="lists">10. Lists</a>
     <a href="#input" class="h2-link" data-target="input">11. Input</a>
@@ -54,7 +56,7 @@
     <pre>emerald fileName.emld</pre>
 
     <h3 id="editor-support">1.2 Editor Support</h3>
-    <p>Search for <strong>Emerald</strong> in the VS Code Extensions panel to install the syntax highlighting extension for <code>.emld</code> files.</p>
+    <p>Search for <strong>Emerald Language</strong> in the VS Code Extensions panel to install the syntax highlighting extension for <code>.emld</code> files.</p>
 
     <h3 id="hello-world">1.3 Hello World</h3>
     <pre><span class="kw">print</span> <span class="str">"Hello, World!"</span></pre>
@@ -65,11 +67,17 @@
 <span class="kw">print</span> <span class="str">"hello"</span> <span class="cm">! inline comment</span></pre>
 
     <h2 id="variables">3. Variables</h2>
-    <p>All variables are global. Declaration uses the <code>var.</code> prefix.</p>
+    <p>All variables are global. Declaration uses the <code>var.</code> prefix. Reassignment uses a bare <code>.</code> prefix (no <code>var.</code>).</p>
     <pre><span class="kw">var</span>.<span class="fn">name</span> <span class="str">"Hanno"</span>
 <span class="kw">var</span>.<span class="fn">age</span> <span class="num">67</span>
 <span class="kw">var</span>.<span class="fn">isCool</span> <span class="kw">False</span>
-<span class="kw">var</span>.<span class="fn">nothing</span> <span class="kw">Null</span></pre>
+<span class="kw">var</span>.<span class="fn">nothing</span> <span class="kw">Null</span>
+
+<span class="fn">.name</span> <span class="str">"Bob"</span>       <span class="cm">! reassignment</span>
+<span class="fn">.age</span> <span class="op">+=</span> <span class="num">1</span>         <span class="cm">! compound assignment</span>
+<span class="fn">.age</span> <span class="op">-=</span> <span class="num">5</span>
+<span class="fn">.age</span> <span class="op">*=</span> <span class="num">2</span>
+<span class="fn">.age</span> <span class="op">/=</span> <span class="num">3</span></pre>
 
     <h2 id="data-types">4. Data Types</h2>
     <table>
@@ -81,7 +89,22 @@
       <tr><td>list</td><td><code>(1, 2, 3)</code></td><td>Parenthesised, comma-separated. 1-indexed.</td></tr>
     </table>
 
-    <h3 id="string-interpolation">4.1 String Interpolation</h3>
+    <h3 id="type-checking">4.1 Type Checking</h3>
+    <p>Use <code>num</code>, <code>str</code>, or <code>bool</code> as values with the <code>=</code> operator to check a variable's type. Combine with <code>not</code> to negate.</p>
+    <pre><span class="kw">if</span> <span class="fn">x</span> <span class="op">=</span> <span class="kw">num</span> {
+  <span class="kw">print</span> <span class="str">"x is a number"</span>
+}
+<span class="kw">if</span> <span class="fn">s</span> <span class="op">=</span> <span class="kw">str</span> {
+  <span class="kw">print</span> <span class="str">"s is a string"</span>
+}
+<span class="kw">if</span> <span class="fn">b</span> <span class="op">=</span> <span class="kw">bool</span> {
+  <span class="kw">print</span> <span class="str">"b is a boolean"</span>
+}
+<span class="kw">if</span> <span class="fn">x</span> <span class="op">=</span> <span class="kw">not</span> <span class="kw">str</span> {
+  <span class="kw">print</span> <span class="str">"x is not a string"</span>
+}</pre>
+
+    <h3 id="string-interpolation">4.2 String Interpolation</h3>
     <p>Use <code>$"..."</code> to embed expressions inside strings. Non-string values must be explicitly converted with <code>str()</code> - no automatic coercion.</p>
     <pre><span class="kw">var</span>.<span class="fn">name</span> <span class="str">"World"</span>
 <span class="kw">print</span> <span class="str">$"Hello, {</span><span class="fn">name</span><span class="str">}!"</span>     <span class="cm">! Hello, World!</span>
@@ -96,8 +119,12 @@
       <tr><td><code>-</code></td><td>Subtraction / string removal</td><td>number - number, string - string</td></tr>
       <tr><td><code>*</code></td><td>Multiplication / string repeat</td><td>number * number, string * number</td></tr>
       <tr><td><code>/</code></td><td>Division</td><td>number / number</td></tr>
-      <tr><td><code>=</code></td><td>Equal to</td><td>All types</td></tr>
+      <tr><td><code>=</code></td><td>Equal to / membership / type check</td><td>All types</td></tr>
+      <tr><td><code>not</code></td><td>Prefix: boolean NOT / not-equal</td><td>Any type</td></tr>
+      <tr><td><code>or</code></td><td>Infix: logical OR / membership expansion</td><td>Any type</td></tr>
+      <tr><td><code>and</code></td><td>Infix: logical AND</td><td>Any type</td></tr>
       <tr><td><code>&lt;</code> <code>&gt;</code> <code>&lt;=</code> <code>&gt;=</code></td><td>Comparison</td><td>number only</td></tr>
+      <tr><td><code>+=</code> <code>-=</code> <code>*=</code> <code>/=</code></td><td>Compound assignment</td><td>number</td></tr>
     </table>
     <p>Note: equality is a single <code>=</code>, not <code>==</code>.</p>
 
@@ -107,7 +134,17 @@
 <span class="kw">print</span> <span class="fn">x</span> <span class="op">-</span> <span class="fn">y</span>    <span class="cm">! 7</span>
 <span class="kw">print</span> <span class="fn">x</span> <span class="op">*</span> <span class="fn">y</span>    <span class="cm">! 30</span>
 <span class="kw">print</span> <span class="fn">x</span> <span class="op">/</span> <span class="fn">y</span>    <span class="cm">! 3.33333</span>
-<span class="kw">print</span> <span class="fn">x</span> <span class="op">></span> <span class="num">5</span>    <span class="cm">! True</span></pre>
+<span class="kw">print</span> <span class="fn">x</span> <span class="op">></span> <span class="num">5</span>    <span class="cm">! True</span>
+
+<span class="cm">! not negates booleans and flips equality</span>
+<span class="kw">if</span> <span class="kw">not</span> <span class="fn">done</span> { ... }
+<span class="kw">if</span> <span class="fn">x</span> <span class="op">=</span> <span class="kw">not</span> <span class="num">5</span> { ... }  <span class="cm">! x != 5</span>
+
+<span class="cm">! or expands equality to membership</span>
+<span class="kw">if</span> <span class="fn">x</span> <span class="op">=</span> <span class="num">1</span> <span class="kw">or</span> <span class="num">2</span> <span class="kw">or</span> <span class="num">3</span> { ... }  <span class="cm">! x is 1, 2, or 3</span>
+
+<span class="cm">! and combines conditions</span>
+<span class="kw">if</span> <span class="fn">x</span> <span class="op">></span> <span class="num">0</span> <span class="kw">and</span> <span class="fn">y</span> <span class="op">></span> <span class="num">0</span> { ... }</pre>
 
     <h2 id="print">6. Print</h2>
     <p>The <code>print</code> statement evaluates an expression and outputs it to stdout with a trailing newline.</p>
@@ -117,7 +154,7 @@
 <span class="kw">print</span> <span class="str">$"The value is {</span><span class="fn">str</span>(<span class="fn">x</span>)<span class="str">}"</span></pre>
 
     <h2 id="conditionals">7. Conditionals</h2>
-    <p><code>if</code>, <code>elif</code>, and <code>else</code> for branching. Conditions must evaluate to a boolean.</p>
+    <p><code>if</code>, <code>elif</code>, and <code>else</code> for branching. Conditions can use <code>not</code>, <code>or</code>, and <code>and</code>.</p>
     <pre><span class="kw">if</span> <span class="fn">x</span> <span class="op">></span> <span class="num">5</span> {
   <span class="kw">print</span> <span class="str">"big"</span>
 }
@@ -126,12 +163,28 @@
 }
 <span class="kw">else</span> {
   <span class="kw">print</span> <span class="str">"small or zero"</span>
+}
+
+<span class="kw">if</span> <span class="kw">not</span> <span class="fn">flag</span> {
+  <span class="kw">print</span> <span class="str">"flag is falsy"</span>
+}
+
+<span class="kw">if</span> <span class="fn">x</span> <span class="op">></span> <span class="num">0</span> <span class="kw">and</span> <span class="fn">x</span> <span class="op">&lt;</span> <span class="num">10</span> {
+  <span class="kw">print</span> <span class="str">"between 1 and 9"</span>
 }</pre>
 
     <h2 id="loops">8. Loops</h2>
-    <p>The <code>for...in</code> loop iterates over a range or a list variable.</p>
+    <p>Emerald supports <code>while</code> loops and <code>for...in</code> loops.</p>
 
-    <h3 id="numeric-range">8.1 Numeric Range</h3>
+    <h3 id="while-loops">8.1 While Loops</h3>
+    <p>Repeat a block while a condition is truthy. Supports <code>not</code>, <code>or</code>, and <code>and</code> in conditions.</p>
+    <pre><span class="kw">var</span>.<span class="fn">x</span> <span class="num">5</span>
+<span class="kw">while</span> <span class="fn">x</span> <span class="op">></span> <span class="num">0</span> {
+  <span class="kw">print</span> <span class="fn">x</span>
+  <span class="fn">.x</span> <span class="op">-=</span> <span class="num">1</span>
+}</pre>
+
+    <h3 id="numeric-range">8.2 Numeric Range</h3>
     <p>Use <code>range:N</code> to loop from 1 to N inclusive. Use <code>range:(start, end)</code> for a custom range.</p>
     <pre><span class="kw">for</span> <span class="fn">i</span> <span class="kw">in</span> <span class="kw">range</span>:<span class="num">5</span> {
   <span class="kw">print</span> <span class="fn">i</span>
@@ -199,6 +252,11 @@
         <td><code>num(x)</code></td>
         <td>Convert a value to a number. Works on strings, booleans, Null.</td>
         <td><code>num("3.14")</code> &rarr; <code>3.14</code></td>
+      </tr>
+      <tr>
+        <td><code>bool(x)</code></td>
+        <td>Convert a value to a boolean. Falsy values: <code>0</code>, <code>""</code>, <code>Null</code>, <code>False</code>.</td>
+        <td><code>bool(1)</code> &rarr; <code>True</code></td>
       </tr>
     </table>
 

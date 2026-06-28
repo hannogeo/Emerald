@@ -43,6 +43,8 @@ func (i *Interpreter) evalStatement(stmt ast.Statement) error {
 		return i.evalAddStatement(s)
 	case *ast.ForStatement:
 		return i.evalForStatement(s)
+	case *ast.WhileStatement:
+		return i.evalWhileStatement(s)
 	case *ast.BlockStatement:
 		return i.evalBlockStatement(s)
 	}

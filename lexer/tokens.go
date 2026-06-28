@@ -41,12 +41,18 @@ const (
 	IN         TokenType = "IN"
 	RANGE      TokenType = "RANGE"
 	COLON      TokenType = "COLON"
+	DOT        TokenType = "DOT"
 	PLUS_EQ    TokenType = "PLUS_EQ"
 	MINUS_EQ   TokenType = "MINUS_EQ"
 	ASTERISK_EQ TokenType = "ASTERISK_EQ"
 	SLASH_EQ   TokenType = "SLASH_EQ"
 	NOT        TokenType = "NOT"
 	OR         TokenType = "OR"
+	AND        TokenType = "AND"
+	WHILE      TokenType = "WHILE"
+	NUM        TokenType = "NUM"
+	STR        TokenType = "STR"
+	BOOL       TokenType = "BOOL"
 )
 
 type Token struct {
