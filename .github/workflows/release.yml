@@ -30,7 +30,8 @@ jobs:
         run: GOOS=windows GOARCH=amd64 go build -o emerald-installer.exe ./installer
 
       - name: Package VS Code extension
-        run: cd vscode-emerald && zip -r ../emerald-vscode.zip .
+        run: npx @vscode/vsce package && mv emerald-lang-*.vsix ../emerald-lang.vsix
+        working-directory: vscode-emerald
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
@@ -41,4 +42,4 @@ jobs:
           files: |
             emerald.exe
             emerald-installer.exe
-            emerald-vscode.zip
+            emerald-lang.vsix

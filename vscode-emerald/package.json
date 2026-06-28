@@ -2,8 +2,9 @@
   "name": "emerald-lang",
   "displayName": "Emerald Language",
   "description": "Emerald language support - syntax highlighting for .emld files",
-  "version": "0.1.0",
+  "version": "0.1.7",
   "publisher": "emerald-lang",
+  "repository": { "url": "https://github.com/hannogeo/Emerald" },
   "license": "MIT",
   "engines": {
     "vscode": "^1.60.0"

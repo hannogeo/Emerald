@@ -100,10 +100,6 @@ func runUpdate() {
 
 	fmt.Println("Download complete. Installing...")
 
-	if latest.VscodeZipURL != "" {
-		installVscodeExtension(latest.VscodeZipURL)
-	}
-
 	err = replaceBinary(exePath, exePath+".new")
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error installing update: %v\n", err)
