@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Emerald - 404</title>
+  <link rel="icon" type="image/svg+xml" href="emerald.svg">
+  <style>
+    :root {
+      --bg: #0d1117;
+      --bg2: #161b22;
+      --surface: #21262d;
+      --border: #30363d;
+      --text: #e6edf3;
+      --text2: #8b949e;
+      --accent: #2ea043;
+      --accent-hover: #3fb950;
+      --accent-dim: rgba(46, 160, 67, .15);
+      --font: 'SF Mono', 'Cascadia Code', 'JetBrains Mono', 'Consolas', monospace;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 2rem;
+      text-align: center;
+    }
+    .logo {
+      margin-bottom: 3rem;
+    }
+    .logo img {
+      width: 48px;
+      height: 48px;
+      opacity: .3;
+    }
+    .code-block {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem 2.5rem;
+      margin-bottom: 2rem;
+      display: inline-block;
+      text-align: left;
+      line-height: 2;
+    }
+    .code-block .kw { color: #ff7b72; }
+    .code-block .fn { color: #79c0ff; }
+    .code-block .str { color: #a5d6ff; }
+    .code-block .num { color: #79c0ff; }
+    .code-block .cm { color: #8b949e; font-style: italic; }
+    .code-block .err { color: #f85149; font-weight: bold; }
+    .code-block .op { color: #ffa657; }
+    .blink { animation: blink 1s step-end infinite; color: var(--accent); }
+    @keyframes blink { 50% { opacity: 0; } }
+    h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: .5rem;
+      background: linear-gradient(135deg, var(--accent), #56d364);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .sub {
+      color: var(--text2);
+      font-size: 1rem;
+      margin-bottom: 2.5rem;
+    }
+    .btn {
+      display: inline-block;
+      padding: .75rem 2rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: .95rem;
+      text-decoration: none;
+      background: var(--accent);
+      color: #fff;
+      transition: all .2s;
+      font-family: var(--font);
+    }
+    .btn:hover {
+      background: var(--accent-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px var(--accent-dim);
+    }
+    .hint {
+      margin-top: 2rem;
+      color: var(--text2);
+      font-size: .8rem;
+    }
+    .hint code {
+      background: var(--surface);
+      padding: .1em .5em;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="logo">
+    <img src="emerald.svg" alt="">
+  </div>
+
+  <div class="code-block">
+    <span class="kw">var</span>.<span class="fn">page</span> <span class="num">404</span><br>
+    <span class="kw">print</span> <span class="str">"you found it"</span><br>
+    <span class="cm">! wait, that's not right</span><br><br>
+    <span class="err">Runtime error: undefined variable 'page'</span><br>
+    <span class="cm">! you're looking for something that doesn't exist</span><br>
+  </div>
+
+  <h1>404</h1>
+  <p class="sub">This page is undefined.</p>
+
+  <a href="index.html" class="btn">emerald index.html</a>
+</body>
+</html>

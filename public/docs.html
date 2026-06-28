@@ -9,8 +9,13 @@
   <link rel="stylesheet" href="docs.css">
 </head>
 <body>
+  <div id="progressBar"></div>
   <header>
     <div class="logo"><a href="index.html"><img src="emerald.svg" alt="" class="logo-icon"> emerald</a></div>
+    <div class="search-container">
+      <input type="text" id="searchInput" placeholder="Search..." spellcheck="false">
+      <span class="search-hint">/</span>
+    </div>
     <nav>
       <a href="index.html">Home</a>
       <a href="https://github.com/hannogeo/Emerald" target="_blank" rel="noopener noreferrer">GitHub</a>
@@ -265,7 +270,10 @@
 emerald update          Self-update to the latest version
 emerald version         Print version number</pre>
 
+    <div id="noResults" style="display:none">No results found.</div>
   </main>
+
+  <button id="scrollTop" aria-label="Scroll to top"></button>
 
   <footer>
     <p>Emerald - built with Go</p>

@@ -203,3 +203,186 @@
   border-color: var(--border);
   background: var(--surface);
 }
+
+/* -- header search -- */
+header {
+  gap: 1rem;
+}
+.search-container {
+  position: relative;
+  flex: 0 1 220px;
+  min-width: 0;
+}
+#searchInput {
+  width: 100%;
+  padding: .35rem 2rem .35rem .65rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: .8rem;
+  outline: none;
+  transition: border-color .2s;
+}
+#searchInput:focus {
+  border-color: var(--accent);
+  background: var(--bg2);
+}
+#searchInput::placeholder {
+  color: var(--text2);
+}
+.search-hint {
+  position: absolute;
+  right: .5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: .65rem;
+  color: var(--text2);
+  background: var(--bg2);
+  padding: .05rem .35rem;
+  border-radius: 3px;
+  pointer-events: none;
+  border: 1px solid var(--border);
+}
+#noResults {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--text2);
+  font-size: .95rem;
+}
+
+/* -- search dimming -- */
+.docs-page.search-active h2,
+.docs-page.search-active h3,
+.docs-page.search-active p,
+.docs-page.search-active pre,
+.docs-page.search-active table,
+.docs-page.search-active .syntax-diagram,
+.docs-page.search-active ul,
+.docs-page.search-active .back-link {
+  opacity: .15;
+  transition: opacity .2s;
+}
+.docs-page.search-active .search-match {
+  opacity: 1;
+}
+.docs-page.search-active h2.search-match,
+.docs-page.search-active h3.search-match {
+  opacity: 1;
+}
+
+/* -- progress bar -- */
+#progressBar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: var(--accent);
+  z-index: 999;
+  width: 0;
+  transition: width .1s linear;
+}
+
+/* -- copy button -- */
+.copy-btn {
+  position: absolute;
+  top: .5rem;
+  right: .5rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text2);
+  cursor: pointer;
+  font-family: var(--font);
+  font-size: .75rem;
+  padding: .3rem .6rem;
+  opacity: 0;
+  transition: opacity .2s, color .2s, border-color .2s;
+  z-index: 1;
+  line-height: 1;
+}
+pre:hover .copy-btn {
+  opacity: 1;
+}
+.copy-btn:hover {
+  color: var(--text);
+  border-color: var(--accent);
+  background: var(--accent-dim);
+}
+.copy-btn.copied {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+pre {
+  position: relative;
+}
+
+/* -- line numbers -- */
+pre.line-numbers {
+  padding-left: calc(3ch + 1.5rem);
+  counter-reset: line;
+}
+pre.line-numbers .line {
+  display: inline;
+  counter-increment: line;
+}
+pre.line-numbers .line::before {
+  content: counter(line);
+  display: inline-block;
+  width: 3ch;
+  margin-left: calc(-3ch - 1rem);
+  margin-right: 1rem;
+  color: var(--text2);
+  text-align: right;
+  user-select: none;
+  opacity: .5;
+  font-size: .8em;
+}
+
+/* -- scroll to top -- */
+#scrollTop {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 500;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .2s, border-color .2s, background .2s;
+}
+#scrollTop.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+#scrollTop::after {
+  content: '';
+  display: block;
+  width: 10px;
+  height: 10px;
+  border-left: 2px solid var(--text2);
+  border-top: 2px solid var(--text2);
+  transform: rotate(45deg);
+  margin: 5px auto 0;
+  transition: border-color .2s;
+}
+#scrollTop:hover {
+  border-color: var(--accent);
+  background: var(--accent-dim);
+}
+#scrollTop:hover::after {
+  border-color: var(--accent);
+}
+
+@media (max-width: 640px) {
+  .search-container { display: none; }
+  #scrollTop { bottom: 1rem; right: 1rem; width: 36px; height: 36px; font-size: 1rem; }
+  pre.line-numbers { padding-left: 1rem; }
+  pre.line-numbers .line::before { display: none; }
+}
+
